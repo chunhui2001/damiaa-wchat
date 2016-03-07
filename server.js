@@ -84,25 +84,18 @@ app.post('/', function(req, res) {
 	var encrypt_type 	= req.query['encrypt_type'];	// 加密类型：aes
 	var msg_signature 	= req.query['msg_signature'];	// 消息体签名：c3fbfe6a3f4b6b1f9476fa12899659ae246c476f
 
-
 	var requestBody 	= req.isXml ? req.body.xml : req.body;
 	var toUserName 		= null;
 	var encrypt 		= null;
-
 
 	var sendResult 	= {'msg':'post message', 'query': req.query, 'params':req.params, 'body': requestBody};
 
 	if (req.isXml) {
 		toUserName 	= requestBody.tousername;	// may be array
 
-
-		//sendResult.toUserName 	= toUserName;
-
 		var requestObject 	= null;
 
 		if (!req.isEncrypt) {
-			
-
 			// get request body from req.body.xml
 			requestObject 		= req.body.xml;
 		} else {
@@ -124,23 +117,6 @@ app.post('/', function(req, res) {
 			return res.send(result);
 		});
 	}
-
-	
-	// var sha1 = crypto
-	// 				.createHash('sha1')
-	// 				.update(_.sortBy([globalConfig.client_sign_token, timestamp, nonce], function(a) { return a}).join(''))
-	// 				.digest("hex");
-
-
-	// console.log(sendResult);
-
-	// if (sha1==signature) {
-	// 	console.log('message validate success');
-	// 	return res.send(msg_signature);
-	// } else {
-	// 	console.log('message validate failed');
-	// 	return res.send(false);
-	// }
 
 });
 

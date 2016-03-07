@@ -29,8 +29,29 @@ function onClick (message, callback) {
 							+ ']]></Content></xml>';
 
 	return callback(null, sendMessage);
+}
 
-	return callback(null, eventKey);
+function onPicWeixin (message, callback) {
+
+	var fromOpenId 		= message.fromusername[0];
+	var toMasterName 	= message.tousername[0];
+	var eventKey 		= message.eventkey[0];
+
+	var content 		= null;
+
+	if (eventKey == 'upload_head_photo') {
+		content 	= '上传头像.';
+	}
+
+	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
+							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+							+ toMasterName + ']]></FromUserName><CreateTime>' 
+							+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
+							+ content
+							+ ']]></Content></xml>';
+
+	return callback(null, sendMessage);
+
 }
 
 
@@ -118,6 +139,8 @@ function onPush (message, callback) {
 			return onView(message, callback);
 		} else if (message.event[0] == 'CLICK'){
 			return onClick(message, callback);
+		} else if (message.event[0] == 'pic_weixin'){
+			return onPicWeixin(message, callback);
 		}
 	}
 

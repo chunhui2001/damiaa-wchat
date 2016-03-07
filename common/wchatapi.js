@@ -94,29 +94,35 @@ function genMenu(meun, callback) {
 }
 
 
-module.exports 	= {
-	getAccessToken: getAccessToken,
-	getIPList: getIPList,
+
+if (require.main == module) {
+	/*
+	getAccessToken(function(error, result) {
+		if (error) return console.log(error);
+
+		console.log(result);
+	});*/
+
+	/*
+	getIPList(function(error, result) {
+		if (error) return console.log(error);
+
+		console.log(result);
+	});*/
+
+	genMenu(null, function(error, result) {
+		if (error) return console.log(error);
+
+		console.log(result);
+	});
+} else {
+	module.exports 	= {
+		getAccessToken: getAccessToken,
+		getIPList: getIPList,
+	}
 }
 
 
-/*
-getAccessToken(function(error, result) {
-	if (error) return console.log(error);
-
-	console.log(result);
-});*/
-
-/*
-getIPList(function(error, result) {
-	if (error) return console.log(error);
-
-	console.log(result);
-});*/
 
 
-genMenu(null, function(error, result) {
-	if (error) return console.log(error);
 
-	console.log(result);
-});

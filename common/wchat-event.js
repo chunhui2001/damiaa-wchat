@@ -56,17 +56,23 @@ function onImage (message, callback) {
 	// TODO:
 	// 根据用户 openid 更新用户头像 
 
-	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
+	// http://mp.weixin.qq.com/wiki/1/6239b44c206cab9145b1d52c67e6c551.html
+
+	var sendMessage 	='<xml><ToUserName><![CDATA[' 
 							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
 							+ toMasterName + ']]></FromUserName><CreateTime>' 
-							+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
-							+ '上传成功头像.' 
-							+ ']]></Content></xml>';
+							+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>1</ArticleCount><Articles>'
+							+ '<item><Title><![CDATA[' 
+							+ '上传成功头像.' + ']]></Title><PicUrl><![CDATA[' 
+							+ picurl + ']]></PicUrl><Url><![CDATA[' 
+							+ picurl + ']]></Url></item></Articles></xml>';
 
 	return callback(null, sendMessage);
 }
 
 function onText(message, callback) {
+	// http://mp.weixin.qq.com/wiki/1/6239b44c206cab9145b1d52c67e6c551.html
+
 	var fromOpenId 		= message.fromusername[0];
 	var toMasterName 	= message.tousername[0];
 	var content 		= message.content[0];

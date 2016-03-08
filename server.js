@@ -100,6 +100,7 @@ app.post('/', function(req, res) {
 			requestObject 		= req.body.xml;
 		} else {
 			// TODO
+			// http://mp.weixin.qq.com/wiki/14/70e73cedf9fd958d2e23264ba9333ad2.html
 			/*var msg_sign 	= msg_signature;
 			var timeStamp 	= timestamp;
 			var from_xml 	= req.rawBody;

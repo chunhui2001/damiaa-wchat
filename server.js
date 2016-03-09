@@ -7,7 +7,7 @@ var globalConfig 	= require('./config/global');
 var wchatEvent 		= require('./common/wchat-event');
 
 
-
+console.log(globalConfig);
 
 var cookieParser 	= require('cookie-parser');
 var bodyParser 		= require('body-parser');

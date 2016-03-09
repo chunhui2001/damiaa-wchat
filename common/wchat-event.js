@@ -1,11 +1,51 @@
 var moment 		= require('moment');
-
+var wchatAPI 	= require('./wchatapi');
 
 
 function onView (message, callback) {
 
 }
 
+function onSubscribe(message, callback) {
+
+	var fromOpenId 		= message.fromusername[0];
+	var toMasterName 	= message.tousername[0];
+
+	var content 		= '欢迎关注 "AA精米" 东北大米微信直销平台, 祝您生活愉快 ：）';
+
+	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
+							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+							+ toMasterName + ']]></FromUserName><CreateTime>' 
+							+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
+							+ content
+							+ ']]></Content></xml>';
+
+	wchatAPI.joinGroup(fromOpenId, null, function(err, result) {
+		if (err) console.log(err, "joinGroup ERROR");
+
+		console.log(result, "joinGroup Success");
+		
+		return callback(null, sendMessage);
+	});
+	
+}
+
+function onUnSubscribe(message, callback) {
+
+	var fromOpenId 		= message.fromusername[0];
+	var toMasterName 	= message.tousername[0];
+
+	var content 		= '取消关注';
+
+	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
+							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+							+ toMasterName + ']]></FromUserName><CreateTime>' 
+							+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
+							+ content
+							+ ']]></Content></xml>';
+
+	return callback(null, sendMessage);
+}
 
 function onClick (message, callback) {
 
@@ -17,8 +57,16 @@ function onClick (message, callback) {
 
 	// V1001_GOOD
 
-	if (eventKey == 'V1001_GOOD') {
+	if (eventKey == 'K_V1001_GOOD') {
 		content 	= '欢迎来到 "AA精米".';
+	}
+
+	if (eventKey == 'K_BOSS') {
+		content 	= 'Hi, BOSS.';
+	}
+
+	if (content == null) {
+		content = '(null) ' + eventKey;
 	}
 
 	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
@@ -39,7 +87,7 @@ function onPicWeixin (message, callback) {
 
 	var content 		= null;
 
-	if (eventKey == 'upload_head_photo') {
+	if (eventKey == 'K_upload_head_photo') {
 		content 	= '上传头像.';
 	}
 
@@ -135,12 +183,24 @@ function onPush (message, callback) {
 	// text
 
 	if (message.msgtype[0] == 'event') {
-		if (message.event[0] == 'VIEW') {			
-			return onView(message, callback);
-		} else if (message.event[0] == 'CLICK'){
-			return onClick(message, callback);
-		} else if (message.event[0] == 'pic_weixin'){
-			return onPicWeixin(message, callback);
+		switch(message.event[0].toLowerCase()) {
+			case 'view':	
+				return onView(message, callback);
+				break;
+			case 'click':
+				return onClick(message, callback);
+				break;
+			case 'pic_weixin':
+				return onPicWeixin(message, callback);
+				break;
+			case 'unsubscribe':
+				return onUnSubscribe(message, callback);
+				break;
+			case 'subscribe':
+				return onSubscribe(message, callback);
+				break;
+			default:
+				console.log('未能捕捉到事件: ' + message.event[0]);
 		}
 	}
 

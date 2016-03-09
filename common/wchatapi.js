@@ -12,11 +12,13 @@ var ENDPOINTS_IP_LIST 		= endpoints.wchat_ip_list;
 
 var ENDPOINTS_GEN_MENU 		= endpoints.wchat_gen_menu;
 var ENDPOINTS_GEN_SPEC_MENU	= endpoints.wchat_gen_spec_menu;
+var ENDPOINTS_DEL_SPEC_MENU	= endpoints.wchat_del_spec_menu;
 var ENDPOINTS_GET_MENU 		= endpoints.wchat_get_menu;
 
-var ENDPOINTS_CREATE_GROUP 	= endpoints.wchat_create_group;
-var ENDPOINTS_JOIN_GROUP 	= endpoints.wchat_join_group;
-var ENDPOINTS_GET_ALL_GROUPS	= endpoints.wchat_get_all_groups;
+var ENDPOINTS_CREATE_GROUP 			= endpoints.wchat_create_group;
+var ENDPOINTS_JOIN_GROUP 			= endpoints.wchat_join_group;
+var ENDPOINTS_GET_ALL_GROUPS		= endpoints.wchat_get_all_groups;
+var ENDPOINTS_GET_GROUPID_BYUSER	= endpoints.wchat_get_groupid_by_user
 
 var ENDPOINTS_GET_USERLIST		= endpoints.wchat_get_userlist;
 var ENDPOINTS_GET_USERINFO		= endpoints.wchat_get_userinfo;
@@ -78,7 +80,7 @@ function genMenu(meun, callback) {
 				{	
 					"type":"view",
 					"name":"AA精米",
-					"url":"http://damiaa.com:8100/"
+					"url":"http://wap.damiaa.com/"
 				}, 
 				{
 					"type": "pic_weixin", 
@@ -121,6 +123,20 @@ function genMenu(meun, callback) {
 	});
 }
 
+function delSpecMenu(menuid, callback) {	
+	httpClient(ENDPOINTS_DEL_SPEC_MENU.replace('{{{ACCESS_TOKEN}}}', accessToken)
+			, {"menuid":menuid}, 'post', null, function(error, result) {
+		if (error) return callback(error);
+
+		// {"errcode":40013,"errmsg":"invalid appid"}
+		if (result.errcode) {
+			return callback(result);
+		}
+
+		return callback(null, result);
+	});
+}
+
 function genSpecMenu(specMenu, callback) {
 	// http://mp.weixin.qq.com/wiki/0/c48ccd12b69ae023159b4bfaa7c39c20.html
 
@@ -129,7 +145,7 @@ function genSpecMenu(specMenu, callback) {
 				{	
 					"type":"view",
 					"name":"AA精米",
-					"url":"http://damiaa.com:8100/"
+					"url":"http://wap.damiaa.com/"
 				}, 
 				{
 					"type": "pic_weixin", 
@@ -228,7 +244,22 @@ function createGroup(groupName, callback) {
 
 function joinGroup(openid, groupid, callback) {	
 	if (_.isEmpty(openid)) return callback('openid 不可以为空！');
-	if (_.isEmpty(groupid)) return callback('groupid 不可以为空！');
+
+	var groupMapping 	= {
+			"ofnVVw9aVxkxSfvvW373yuMYT7fs": "100",		// 100 => boss
+			"asd": "101"									// 101 => developer
+	};
+
+	if (_.isEmpty(groupid)) {
+		if (groupMapping[openid])
+			groupid = groupMapping[openid];
+		else {
+			return callback('groupid 不可以为空！');
+		}
+	}
+
+
+
 
 	httpClient(ENDPOINTS_JOIN_GROUP.replace('{{{ACCESS_TOKEN}}}', accessToken)
 					, {"openid":openid,"to_groupid":groupid}, 'post', null, function(error, result) {
@@ -249,6 +280,20 @@ function getAllGroups(callback) {
 		if (error) return callback(error);
 
 		// {"errcode":40013,"errmsg":"invalid appid"}
+		if (result.errcode) {
+			return callback(result);
+		}
+
+		return callback(null, result);
+	});
+}
+
+function getGroupByUser(openid, callback) {
+	httpClient(ENDPOINTS_GET_GROUPID_BYUSER.replace('{{{ACCESS_TOKEN}}}', accessToken)
+					, {"openid": openid}, 'post', null, function(error, result) {
+
+		if (error) return callback(error);
+
 		if (result.errcode) {
 			return callback(result);
 		}
@@ -311,12 +356,17 @@ if (require.main == module) {
 	// 	console.log(result);
 	// });
 
-	// getMenu(function(error, result) {
+	getMenu(function(error, result) {
+		if (error) return console.log(error);
+		console.log(result);
+	});
+
+	// genMenu(null, function(error, result) {
 	// 	if (error) return console.log(error);
 	// 	console.log(result);
 	// });
 
-	// genMenu(null, function(error, result) {
+	// delSpecMenu('407765872', function(error, result) {
 	// 	if (error) return console.log(error);
 	// 	console.log(result);
 	// });
@@ -341,6 +391,11 @@ if (require.main == module) {
 	// 	console.log(result);
 	// });
 
+	// getGroupByUser('ofnVVw9aVxkxSfvvW373yuMYT7fs',function(error, result) {
+	// 	if (error) return console.log(error);
+	// 	console.log(result);
+	// });
+
 	// getUserList(null, function(error, result) {
 	// 	if (error) return console.log(error);
 	// 	console.log(result);
@@ -350,14 +405,15 @@ if (require.main == module) {
  	// 'ofnVVw9aVxkxSfvvW373yuMYT7fs',
  	// 'ofnVVw5P3o2wAUxaGF-t08JDioYc'
 
-	getUserInfo('ofnVVw8L9-OAibNXOsofdhOQrSko', null, function(error, result) {
-		if (error) return console.log(error);
-		console.log(result);
-	});
+	// getUserInfo('ofnVVw8L9-OAibNXOsofdhOQrSko', null, function(error, result) {
+	// 	if (error) return console.log(error);
+	// 	console.log(result);
+	// });
 } else {
 	module.exports 	= {
 		getAccessToken: getAccessToken,
 		getIPList: getIPList,
+		joinGroup: joinGroup
 	}
 }
 

@@ -19,6 +19,9 @@ module.exports = {
 	// 创建个性化菜单
 	wchat_gen_spec_menu: 'https://api.weixin.qq.com/cgi-bin/menu/addconditional?access_token={{{ACCESS_TOKEN}}}',
 
+	// 创建个性化菜单
+	wchat_del_spec_menu: 'https://api.weixin.qq.com/cgi-bin/menu/delconditional?access_token={{{ACCESS_TOKEN}}}',
+
 	// 创建分组
 	wchat_create_group: 'https://api.weixin.qq.com/cgi-bin/groups/create?access_token={{{ACCESS_TOKEN}}}',
 
@@ -33,4 +36,7 @@ module.exports = {
 
 	// 获取用户基本信息
 	wchat_get_userinfo: 'https://api.weixin.qq.com/cgi-bin/user/info?access_token={{{ACCESS_TOKEN}}}&openid={{{OPENID}}}&lang={{{zh_CN}}}',
+
+	// 查询用户所在分组
+	wchat_get_groupid_by_user: 'https://api.weixin.qq.com/cgi-bin/groups/getid?access_token={{{ACCESS_TOKEN}}}',
 }

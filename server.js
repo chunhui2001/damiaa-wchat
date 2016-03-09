@@ -36,6 +36,8 @@ app.set('port', process.env.NODE_WCHAT_PORT || 8108);
 
 app.get('/', function(req, res) {
   
+	console.log('coming a get request...');
+
 	var signature 		= req.query['signature'];
 	var timestamp 		= req.query['timestamp'];
 	var nonce 			= req.query['nonce'];
@@ -89,6 +91,9 @@ app.post('/', function(req, res) {
 	var encrypt 		= null;
 
 	var sendResult 	= {'msg':'post message', 'query': req.query, 'params':req.params, 'body': requestBody};
+
+
+	//console.log(sendResult);
 
 	if (req.isXml) {
 		toUserName 	= requestBody.tousername;	// may be array

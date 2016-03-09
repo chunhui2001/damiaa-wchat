@@ -37,7 +37,7 @@ var globalConfig 	= {
 	client_encodingAESKey: '368efzUP97lf34owkeVyUqpEceZfkPsCLyFX2Hd17ej',
 	wchat_damiaa_appid: 'wxbfbeee15bbe621e6',	
 	wchat_damiaa_secret: 'bce17ac69d41807ccfcdeb639a39e008',
-	current_access_token: 'PDZ0MFZccfERxviqpMgRk7lNKE4WjXrtWAbNXhqIOnEvIDNtr-4aEEdUgvsxy_DBkOJ_gMWQYPH0G5B12MDzIxDaQaFyhk7mkerV5A1dOL_0QlUjiHf3d_w3i8CF9zuLMQCfADAFJV',
+	current_access_token: 'atLFHGvdfKWUT0T7vOuKKLm_Tlcj8oruABPEAj2Fc-EDRXCWb4zz2cU3GoTUzeD83lfLh6-43jk_qJ7MeASV-I5OigVh0W2JxyfAegXlyK5ne4_HJGB_A02OsIy6cdwCYUYeAGARNR',
 
 
 	menuKeys: {

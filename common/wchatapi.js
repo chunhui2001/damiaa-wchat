@@ -80,7 +80,7 @@ function genMenu(meun, callback) {
 				{	
 					"type":"view",
 					"name":"AA精米",
-					"url":"http://wap.damiaa.com/"
+					"url":"http://www.damiaa.com/"
 				}, 
 				{
 					"type": "pic_weixin", 
@@ -145,7 +145,7 @@ function genSpecMenu(specMenu, callback) {
 				{	
 					"type":"view",
 					"name":"AA精米",
-					"url":"http://wap.damiaa.com/"
+					"url":"http://www.damiaa.com/"
 				}, 
 				{
 					"type": "pic_weixin", 
@@ -366,7 +366,7 @@ if (require.main == module) {
 	// 	console.log(result);
 	// });
 
-	// delSpecMenu('407765872', function(error, result) {
+	// delSpecMenu('407836341', function(error, result) {
 	// 	if (error) return console.log(error);
 	// 	console.log(result);
 	// });

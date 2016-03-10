@@ -3,6 +3,7 @@
 var http    = require('http');
 var request = require('request');
 var URL     = require('url');
+var Q       = require('q');
 
 exports.httpClient = function(url, parmas, method, certificate, callback) {
 
@@ -31,26 +32,37 @@ exports.httpClient = function(url, parmas, method, certificate, callback) {
 
     request(options, function(error, response, body) {
 
-        if (!error) {
-            try {               
-                var info = JSON.parse(body);
+        var deferred    = Q.defer();
 
-                if (info.message.indexOf('Invalid access token') != -1) {
-                    return callback({error: true, message: info.message, data: null}, null);
-                }
-
-                return callback(null,info);
-            } catch(e) {
-
-                if (body && body.message && body.message.indexOf('Invalid access token') != -1) {
-                    return callback({error: true, message: body.message, data: 4000}, null);
-                }
-
-                return callback(null,body);
-            }
+        if (error) {
+            deferred.reject(error);             
+            return callback ? deferred.promise.nodeify(callback) : deferred.promise;
         }
 
+        try {               
+            var info = body;
 
-        return callback(error,null);
+            if (info.message && info.message.indexOf('Invalid access token') != -1) {
+                var theError    = {error: true, message: info.message, data: null};
+
+                deferred.reject(theError);       
+                return callback ? deferred.promise.nodeify(callback) : deferred.promise;
+            }
+
+            deferred.resolve(info);     
+            return callback ? deferred.promise.nodeify(callback) : deferred.promise;
+        } catch(e) {
+
+            if (body && body.message && body.message.indexOf('Invalid access token') != -1) {
+                var theError    = {error: true, message: body.message, data: null};
+
+                deferred.reject(theError); 
+                return callback ? deferred.promise.nodeify(callback) : deferred.promise;
+            }
+
+            deferred.resolve(body);     
+            return callback ? deferred.promise.nodeify(callback) : deferred.promise;
+        }
+        
     });
 }

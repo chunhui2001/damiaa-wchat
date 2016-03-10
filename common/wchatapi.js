@@ -72,6 +72,7 @@ function getUserAccessToken(code, grantType, callback) {
 		// 	groupid: 100 
 		// }
 
+			//console.log(newResult, "newResult");
 			return callback(null, newResult);
 		});
 
@@ -91,19 +92,28 @@ function getAccessToken(callback) {
 
 		return callback(null, result);
 	});
+
+
+	// httpClient(ENDPOINTS_GET_ACCESS, null, 'get', null).then(function(result) {
+	// 	return callback(null, result);
+	// });
 }
 
 function getIPList(callback) {
 	// http://mp.weixin.qq.com/wiki/4/41ef0843d6e108cf6b5649480207561c.html
 
-	httpClient(ENDPOINTS_IP_LIST.replace('{{{ACCESS_TOKEN}}}', accessToken), null, 'get', null, function(error, result) {
-		if (error) return callback(error);
+	// httpClient(ENDPOINTS_IP_LIST.replace('{{{ACCESS_TOKEN}}}', accessToken), null, 'get', null, function(error, result) {
+	// 	if (error) return callback(error);
 
-		// {"errcode":40013,"errmsg":"invalid appid"}
-		if (result.errcode) {
-			return callback(result);
-		}
+	// 	// {"errcode":40013,"errmsg":"invalid appid"}
+	// 	if (result.errcode) {
+	// 		return callback(result);
+	// 	}
 
+	// 	return callback(null, result.ip_list);
+	// });
+
+	httpClient(ENDPOINTS_IP_LIST.replace('{{{ACCESS_TOKEN}}}', accessToken), null, 'get', null).then(function(result) {
 		return callback(null, result.ip_list);
 	});
 }
@@ -402,10 +412,10 @@ if (require.main == module) {
 	// 	console.log(result);
 	// });
 	
-	// getIPList(function(error, result) {
-	// 	if (error) return console.log(error);
-	// 	console.log(result);
-	// });
+	getIPList(function(error, result) {
+		if (error) return console.log(error);
+		console.log(result);
+	});
 
 	// getMenu(function(error, result) {
 	// 	if (error) return console.log(error);

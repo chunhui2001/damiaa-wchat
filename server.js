@@ -2,6 +2,7 @@ var http 		= require('http');
 var express 	= require('express');
 var _ 			= require('underscore');
 var crypto 		= require('crypto');
+var redis 		= require('redis');
 
 var globalConfig 	= require('./config/global');
 var wchatEvent 		= require('./common/wchat-event');
@@ -15,6 +16,19 @@ var bodyParser 		= require('body-parser');
 var xmlParser 		= require('express-xml-bodyparser');
 var session 		= require('express-session');
 
+
+
+var redisClient 	= redis.createClient("redis://127.0.0.1:6379/2");
+
+
+//url: null; The redis url to connect to 
+//([redis:]//[user][:password@][host][:port][/db-number][?db=db-number[&password=bar[&option=value]]] 
+//For more info check IANA)
+
+redisClient.on('connect', function(err) {
+	if (err) return console.log('Try to connect to redis server failed, ' + err);	
+	require('./common/wxjob-refresh-token').refreshToken(redisClient); 
+});
 
 var app = express();
 

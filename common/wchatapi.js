@@ -4,6 +4,8 @@ var httpClient 		= require('./http-client').httpClient;
 var endpoints 		= require('../config/endpoints');
 var globalCOnfig 	= require('../config/global');
 
+var _FETCH_TOKEN 	= require('./support').fetchAccessToken;
+
 var accessToken		= globalCOnfig.current_access_token;
 var MENU_KEYS		= globalCOnfig.menuKeys;
 
@@ -102,34 +104,50 @@ function getAccessToken(callback) {
 function getIPList(callback) {
 	// http://mp.weixin.qq.com/wiki/4/41ef0843d6e108cf6b5649480207561c.html
 
-	// httpClient(ENDPOINTS_IP_LIST.replace('{{{ACCESS_TOKEN}}}', accessToken), null, 'get', null, function(error, result) {
-	// 	if (error) return callback(error);
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
+		}
 
-	// 	// {"errcode":40013,"errmsg":"invalid appid"}
-	// 	if (result.errcode) {
-	// 		return callback(result);
-	// 	}
+		var currentToken 	= result;
 
-	// 	return callback(null, result.ip_list);
-	// });
+		httpClient(ENDPOINTS_IP_LIST.replace('{{{ACCESS_TOKEN}}}', currentToken), null, 'get', null, function(error, result) {
+			if (error) return callback(error);
 
-	httpClient(ENDPOINTS_IP_LIST.replace('{{{ACCESS_TOKEN}}}', accessToken), null, 'get', null).then(function(result) {
-		return callback(null, result.ip_list);
+			// {"errcode":40013,"errmsg":"invalid appid"}
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			return callback(null, result.ip_list);
+		});
 	});
 }
 
 function getMenu(callback) {
-	httpClient(ENDPOINTS_GET_MENU.replace('{{{ACCESS_TOKEN}}}', accessToken), null, 'get', null, function(error, result) {
-
-		if (error) return callback(error);
-
-		if (result.errcode) {
-			return callback(result);
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
 		}
 
-		console.log(JSON.stringify(result.menu), 'menu');
-		console.log(JSON.stringify(result.conditionalmenu), 'conditionalmenu');
-		return callback(null, result);
+		var currentToken 	= result;
+
+		httpClient(ENDPOINTS_GET_MENU.replace('{{{ACCESS_TOKEN}}}', currentToken), null, 'get', null, function(error, result) {
+
+			if (error) return callback(error);
+
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			console.log(JSON.stringify(result.menu), 'menu');
+			console.log(JSON.stringify(result.conditionalmenu), 'conditionalmenu');
+			return callback(null, result);
+		});
 	});
 }
 
@@ -172,29 +190,49 @@ function genMenu(meun, callback) {
 
 	if (meun) theMeun = meun;
 
-	httpClient(ENDPOINTS_GEN_MENU.replace('{{{ACCESS_TOKEN}}}', accessToken), theMeun, 'post', null, function(error, result) {
-		if (error) return callback(error);
-
-		// {"errcode":40013,"errmsg":"invalid appid"}
-		if (result.errcode) {
-			return callback(result);
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
 		}
 
-		return callback(null, result);
+		var currentToken 	= result;
+
+		httpClient(ENDPOINTS_GEN_MENU.replace('{{{ACCESS_TOKEN}}}', currentToken), theMeun, 'post', null, function(error, result) {
+			if (error) return callback(error);
+
+			// {"errcode":40013,"errmsg":"invalid appid"}
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			return callback(null, result);
+		});
 	});
 }
 
 function delSpecMenu(menuid, callback) {	
-	httpClient(ENDPOINTS_DEL_SPEC_MENU.replace('{{{ACCESS_TOKEN}}}', accessToken)
-			, {"menuid":menuid}, 'post', null, function(error, result) {
-		if (error) return callback(error);
-
-		// {"errcode":40013,"errmsg":"invalid appid"}
-		if (result.errcode) {
-			return callback(result);
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
 		}
 
-		return callback(null, result);
+		var currentToken 	= result;
+		
+		httpClient(ENDPOINTS_DEL_SPEC_MENU.replace('{{{ACCESS_TOKEN}}}', currentToken)
+				, {"menuid":menuid}, 'post', null, function(error, result) {
+			if (error) return callback(error);
+
+			// {"errcode":40013,"errmsg":"invalid appid"}
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			return callback(null, result);
+		});
 	});
 }
 
@@ -275,32 +313,54 @@ function genSpecMenu(specMenu, callback) {
 
 	if (specMenu) theSpecMeun = specMenu;
 
-	httpClient(ENDPOINTS_GEN_SPEC_MENU.replace('{{{ACCESS_TOKEN}}}', accessToken), theSpecMeun, 'post', null, function(error, result) {
-		if (error) return callback(error);
-
-		// {"errcode":40013,"errmsg":"invalid appid"}
-		if (result.errcode) {
-			return callback(result);
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
 		}
 
-		return callback(null, result);
+		var currentToken 	= result;
+		
+		
+		httpClient(ENDPOINTS_GEN_SPEC_MENU.replace('{{{ACCESS_TOKEN}}}', currentToken), theSpecMeun, 'post', null, function(error, result) {
+			if (error) return callback(error);
+
+			// {"errcode":40013,"errmsg":"invalid appid"}
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			return callback(null, result);
+		});
 	});
 }
 
 function createGroup(groupName, callback) {
 	if (_.isEmpty(groupName)) return callback('groupName 不可以为空！');
 
-	httpClient(ENDPOINTS_CREATE_GROUP.replace('{{{ACCESS_TOKEN}}}', accessToken)
-					, {"group":{"name": groupName}}, 'post', null, function(error, result) {
-		if (error) return callback(error);
-
-		// {"errcode":40013,"errmsg":"invalid appid"}
-		if (result.errcode) {
-			return callback(result);
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
 		}
 
-		return callback(null, result);
+		var currentToken 	= result;
+		
+		httpClient(ENDPOINTS_CREATE_GROUP.replace('{{{ACCESS_TOKEN}}}', currentToken)
+						, {"group":{"name": groupName}}, 'post', null, function(error, result) {
+			if (error) return callback(error);
+
+			// {"errcode":40013,"errmsg":"invalid appid"}
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			return callback(null, result);
+		});
 	});
+
 }
 
 function joinGroup(openid, groupid, callback) {	
@@ -320,67 +380,106 @@ function joinGroup(openid, groupid, callback) {
 	}
 
 
-
-
-	httpClient(ENDPOINTS_JOIN_GROUP.replace('{{{ACCESS_TOKEN}}}', accessToken)
-					, {"openid":openid,"to_groupid":groupid}, 'post', null, function(error, result) {
-		if (error) return callback(error);
-
-		// {"errcode":40013,"errmsg":"invalid appid"}
-		if (result.errcode) {
-			return callback(result);
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
 		}
 
-		return callback(null, result);
+		var currentToken 	= result;
+		
+		httpClient(ENDPOINTS_JOIN_GROUP.replace('{{{ACCESS_TOKEN}}}', currentToken)
+					, {"openid":openid,"to_groupid":groupid}, 'post', null, function(error, result) {
+			if (error) return callback(error);
+
+			// {"errcode":40013,"errmsg":"invalid appid"}
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			return callback(null, result);
+		});
 	});
 }
 
 function getAllGroups(callback) {
-	httpClient(ENDPOINTS_GET_ALL_GROUPS.replace('{{{ACCESS_TOKEN}}}', accessToken)
-					, null, 'get', null, function(error, result) {
-		if (error) return callback(error);
-
-		// {"errcode":40013,"errmsg":"invalid appid"}
-		if (result.errcode) {
-			return callback(result);
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
 		}
 
-		return callback(null, result);
+		var currentToken 	= result;
+		
+		httpClient(ENDPOINTS_GET_ALL_GROUPS.replace('{{{ACCESS_TOKEN}}}', currentToken)
+					, null, 'get', null, function(error, result) {
+			if (error) return callback(error);
+
+			// {"errcode":40013,"errmsg":"invalid appid"}
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			return callback(null, result);
+		});
 	});
 }
 
 function getGroupByUser(openid, callback) {
-	httpClient(ENDPOINTS_GET_GROUPID_BYUSER.replace('{{{ACCESS_TOKEN}}}', accessToken)
-					, {"openid": openid}, 'post', null, function(error, result) {
-
-		if (error) return callback(error);
-
-		if (result.errcode) {
-			return callback(result);
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
 		}
 
-		return callback(null, result);
+		var currentToken 	= result;
+		
+		httpClient(ENDPOINTS_GET_GROUPID_BYUSER.replace('{{{ACCESS_TOKEN}}}', currentToken)
+						, {"openid": openid}, 'post', null, function(error, result) {
+
+			if (error) return callback(error);
+
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			return callback(null, result);
+		});
 	});
 }
 
 function getUserList(nextOpenId, callback) {	
-	var endpoints 	= ENDPOINTS_GET_USERLIST.replace('{{{ACCESS_TOKEN}}}', accessToken);
-
-	if (!_.isEmpty(nextOpenId)) {
-		endpoints 	= endpoints.replace('{{{NEXT_OPENID}}}', nextOpenId);
-	} else {
-		endpoints 	= endpoints.replace('&next_openid={{{NEXT_OPENID}}}', '');
-	}
-
-	httpClient(endpoints, null, 'get', null, function(error, result) {
-		if (error) return callback(error);
-
-		// {"errcode":40013,"errmsg":"invalid appid"}
-		if (result.errcode) {
-			return callback(result);
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
 		}
 
-		return callback(null, result);
+		var currentToken 	= result;
+		
+		
+		var endpoints 	= ENDPOINTS_GET_USERLIST.replace('{{{ACCESS_TOKEN}}}', currentToken);
+
+		if (!_.isEmpty(nextOpenId)) {
+			endpoints 	= endpoints.replace('{{{NEXT_OPENID}}}', nextOpenId);
+		} else {
+			endpoints 	= endpoints.replace('&next_openid={{{NEXT_OPENID}}}', '');
+		}
+
+		httpClient(endpoints, null, 'get', null, function(error, result) {
+			if (error) return callback(error);
+
+			// {"errcode":40013,"errmsg":"invalid appid"}
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			return callback(null, result);
+		});
 	});
 }
 
@@ -388,19 +487,29 @@ function getUserInfo(openid, lang, callback) {
 	if (_.isEmpty(openid)) return callback('openid 不可以为空！');
 	if (_.isEmpty(lang)) lang 	= 'zh_CN';
 
-	httpClient(ENDPOINTS_GET_USERINFO
-				  .replace('{{{ACCESS_TOKEN}}}', accessToken)
-				  .replace('{{{OPENID}}}', openid)
-				  .replace('{{{zh_CN}}}', lang)
-				, null, 'get', null, function(error, result) {
-
-		if (error) return callback(error);
-
-		if (result.errcode) {
-			return callback(result);
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
 		}
 
-		return callback(null, result);
+		var currentToken 	= result;
+		
+		httpClient(ENDPOINTS_GET_USERINFO
+					  .replace('{{{ACCESS_TOKEN}}}', currentToken)
+					  .replace('{{{OPENID}}}', openid)
+					  .replace('{{{zh_CN}}}', lang)
+					, null, 'get', null, function(error, result) {
+
+			if (error) return callback(error);
+
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			return callback(null, result);
+		});
 	});
 }
 

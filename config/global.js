@@ -32,13 +32,13 @@ var globalConfig 	= {
 	DAMIAA_API_HOSTNAME: 'api-staging.damiaa.com',
 	STATIC_SERVER_HOSTNAME: 'static-local.damiaa.com',
 
-
 	client_sign_token: 'damiaa0029damiaa0029damiaa0029da',
 	client_encodingAESKey: '368efzUP97lf34owkeVyUqpEceZfkPsCLyFX2Hd17ej',
+
 	wchat_damiaa_appid: 'wxbfbeee15bbe621e6',	
 	wchat_damiaa_secret: 'bce17ac69d41807ccfcdeb639a39e008',
-	current_access_token: 'atLFHGvdfKWUT0T7vOuKKLm_Tlcj8oruABPEAj2Fc-EDRXCWb4zz2cU3GoTUzeD83lfLh6-43jk_qJ7MeASV-I5OigVh0W2JxyfAegXlyK5ne4_HJGB_A02OsIy6cdwCYUYeAGARNR',
-
+	
+	current_access_token: 'bs9UrL5GcQLNISLlhvxdKd2rDkGb7Ca3m7ubc34PI8m6OXPRwLe8y4vbLIe4JrWTxq6G6NcC54k73kgMZSnjZZNNvnTOYrqFRrPV9gZCsnjbz668afgOnfJArwMdAzo9IFPjACAXUE',
 
 	menuKeys: {
 		KEY_UploadHeadPhoto: 'K_upload_head_photo', 			// 上传头像

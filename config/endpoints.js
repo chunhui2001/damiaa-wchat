@@ -1,6 +1,12 @@
 var globalConfig 	= require('./global.js');
 
 module.exports = {
+	// 获取用户 access_token
+	wchat_get_user_access_token: 
+	'https://api.weixin.qq.com/sns/oauth2/access_token?appid='
+		+globalConfig.wchat_damiaa_appid+'&secret='
+		+globalConfig.wchat_damiaa_secret+'&code={{{CODE}}}&grant_type={{{GRANT_TYPE}}}',
+
 	// 获取 access_token
 	wchat_get_access_token: 
 		'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='

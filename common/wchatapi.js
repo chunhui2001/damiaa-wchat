@@ -23,9 +23,60 @@ var ENDPOINTS_GET_GROUPID_BYUSER	= endpoints.wchat_get_groupid_by_user
 var ENDPOINTS_GET_USERLIST		= endpoints.wchat_get_userlist;
 var ENDPOINTS_GET_USERINFO		= endpoints.wchat_get_userinfo;
 
+var ENDPOINTS_GET_USER_ACCESS_TOKEN		= endpoints.wchat_get_user_access_token;
 
 
 
+function getUserAccessToken(code, grantType, callback) {
+	httpClient(ENDPOINTS_GET_USER_ACCESS_TOKEN.replace('{{{CODE}}}', code).replace('{{{GRANT_TYPE}}}', grantType)
+				, null, 'get', null, function(error, result) {
+
+		if (error) return callback(error);
+
+		// {"errcode":40013,"errmsg":"invalid appid"}
+		if (result.errcode) {
+			return callback(result);
+		}
+
+		// { 
+		// 	access_token: 'OezXcEiiBSKSxW0eoylIeHY1i2IU6goc4iJ1rEpZEAT5ed4Xx1lB3BaaShDqg9SWCokh2mBp30k8vNrU9_xrtA6PCbuTRNyZm7GzDs9iSSoAMQRkS9fXEh7t31Yf3gTbqdM7quIiftA8V59-Z842sw',
+		// 	expires_in: 7200,
+		// 	refresh_token: 'OezXcEiiBSKSxW0eoylIeHY1i2IU6goc4iJ1rEpZEAT5ed4Xx1lB3BaaShDqg9SW4v_JtbKHbyJqYxVZB2zlmLc5QOGLPFWsp5k0MPGrVIlisKDaC04hU-3qGJ7xv_kNAMwWjRV2hmv-2MOPzNEynw',
+		// 	openid: 'ofnVVw9aVxkxSfvvW373yuMYT7fs',
+		// 	scope: 'snsapi_base' 
+		// }
+
+		var openid 	= result.openid;
+
+		getUserInfo(openid, null, function(newError, newResult) {
+			console.log(newError, "newError");
+			if (newError) return callback(newError);
+
+			if (newResult.errcode) {
+				return callback(newResult);
+			}
+
+		// { 
+		// 	subscribe: 1,
+		// 	openid: 'ofnVVw9aVxkxSfvvW373yuMYT7fs',
+		// 	nickname: 'Keesh',
+		// 	sex: 1,
+		// 	language: 'zh_CN',
+		// 	city: '朝阳',
+		// 	province: '北京',
+		// 	country: '中国',
+		// 	headimgurl: 'http://wx.qlogo.cn/mmopen/PiajxSqBRaEINIgLWEwQamb0O4c32QKE5yTLv01soN60Kia6HgJLkibiaYKTibZyR2Ea5jkosOIxJgFQdwzJXVJKQZQ/0',
+		// 	subscribe_time: 1457519201,
+		// 	unionid: 'oW9u5waS3S4BMyMj1oumo1gHRneY',
+		// 	remark: '',
+		// 	groupid: 100 
+		// }
+
+			return callback(null, newResult);
+		});
+
+	});
+}
 
 function getAccessToken(callback) {
 	// http://mp.weixin.qq.com/wiki/14/9f9c82c1af308e3b14ba9b973f99a8ba.html
@@ -356,10 +407,10 @@ if (require.main == module) {
 	// 	console.log(result);
 	// });
 
-	getMenu(function(error, result) {
-		if (error) return console.log(error);
-		console.log(result);
-	});
+	// getMenu(function(error, result) {
+	// 	if (error) return console.log(error);
+	// 	console.log(result);
+	// });
 
 	// genMenu(null, function(error, result) {
 	// 	if (error) return console.log(error);
@@ -413,7 +464,8 @@ if (require.main == module) {
 	module.exports 	= {
 		getAccessToken: getAccessToken,
 		getIPList: getIPList,
-		joinGroup: joinGroup
+		joinGroup: joinGroup,
+		getUserAccessToken: getUserAccessToken
 	}
 }
 

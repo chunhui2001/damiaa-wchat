@@ -5,6 +5,7 @@ var crypto 		= require('crypto');
 
 var globalConfig 	= require('./config/global');
 var wchatEvent 		= require('./common/wchat-event');
+var wchatAPI 		= require('./common/wchatapi');
 
 
 console.log(globalConfig);
@@ -126,6 +127,20 @@ app.post('/', function(req, res) {
 
 });
 
+app.get("/openid/:code/:granttype", function(req, res) {
+	var code 		= req.params.code;		
+	var grantType 	= req.params.granttype;
+
+    var sendResult  = {error: false, message: null, data: {code:code, grant_type: grantType}};
+
+    wchatAPI.getUserAccessToken(code, grantType, function(err, result) {
+    	sendResult.error 	= err;
+    	sendResult.data 	= result;
+
+    	res.json(sendResult);
+    });
+});
+
 http.createServer(app).listen(app.get('port'), function() {
-  console.log('Express server listening on port ' + app.get('port'));
+  	console.log('Express server listening on port ' + app.get('port'));
 });

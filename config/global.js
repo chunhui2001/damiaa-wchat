@@ -38,6 +38,10 @@ var globalConfig 	= {
 
 	wchat_damiaa_appid: 'wxbfbeee15bbe621e6',	
 	wchat_damiaa_secret: 'bce17ac69d41807ccfcdeb639a39e008',
+
+	pay_api_key: 'damiaa0029damiaa0029damiaa0029da',
+
+	merchant_id: '1315577401',
 	
 	current_access_token: 'JF5hisqFWBs6S0wzbuFO6_MWz6WHDMLbGk0exoU1biC_Pwwf_hFFMowlN81Qh1tG-SlzeYLT7xuRng12OF-ThC6naFWGlYKuATy80c0uuwpWXGd7HAWOFl-GCTMdxSM0TAQiAIAIPF',
 
@@ -52,3 +56,4 @@ var globalConfig 	= {
 
 
 module.exports = _.extend(globalConfig, externalConfig);
+

@@ -32,7 +32,7 @@ var R_KEY_ACCESS_TOKEN 	= globalConfig.R_KEY_ACCESS_TOKEN;
 */
 
 function worker(redisClient) {
-	if (globalConfig.ENVIRONMENT != 'production') {
+	if (['production', 'staging'].indexOf(globalConfig.ENVIRONMENT) == -1) {
 		console.log(moment().format("YYYY/MM/DD HH:mm:ss"));
 	    console.log('The current access token is: ' + globalConfig.current_access_token);
 		return;

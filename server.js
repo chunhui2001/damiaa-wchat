@@ -47,7 +47,7 @@ app.use(function(req, res, next) {
 
 
 
-app.set('port', process.env.NODE_WCHAT_PORT || 8108);
+app.set('port', process.env.NODE_WCHAT_PORT || 8009);
 
 app.get('/', function(req, res) {
   
@@ -154,6 +154,33 @@ app.get("/openid/:code/:granttype", function(req, res) {
     	res.json(sendResult);
     });
 });
+
+app.post("/unifiedorder", function(req, res) {
+
+	//TODO
+	// should be get authentication and validate token exists 
+
+
+	var sendResult  = {error: false, message: null, data: {code:code, grant_type: grantType}};
+
+	// var theParams 		= {
+	// 	body 			: currentOrder, 			// 'AA精米 特级米 现磨现卖'
+	// 	out_trade_no 	: currentOrder.id,			//
+	// 	total_fee 		: 800,						//
+	// 	userid 			: currentOrder.userId,		//
+	// 	openid 			: currentOrder.openId		// 
+	// };
+
+	wchatAPI.unifiedOrder(req.orderParams, function(err, result) {
+
+		sendResult.error 	= err ? true;
+		sendResult.data 	= err ? err : result;
+		sendResult.message 	= err ? '创建预支付订单失败！' : '创建预支付订单成功。';
+    
+    	res.json(sendResult);
+	});
+});
+
 
 http.createServer(app).listen(app.get('port'), function() {
   	console.log('Express server listening on port ' + app.get('port'));

@@ -45,4 +45,7 @@ module.exports = {
 
 	// 查询用户所在分组
 	wchat_get_groupid_by_user: 'https://api.weixin.qq.com/cgi-bin/groups/getid?access_token={{{ACCESS_TOKEN}}}',
+
+	// 统一下单API
+	wchat_pay_unifiedorder: 'https://api.mch.weixin.qq.com/pay/unifiedorder'
 }

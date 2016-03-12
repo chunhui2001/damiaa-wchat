@@ -9,7 +9,7 @@ var isOpen 				= false;
 
 function fetchAccessToken(callback) {
 
-	if (globalConfig.ENVIRONMENT != 'production') {
+	if (['production', 'staging'].indexOf(globalConfig.ENVIRONMENT) == -1) {
 		return callback(null, globalConfig.current_access_token);
 		return;
 	}

@@ -1,4 +1,7 @@
-var _ 		= require('underscore');
+var _ 			= require('underscore');
+var crypto 		= require('crypto');
+var xml2json 	= require('xml2json');
+var uuid 		= require('node-uuid');
 
 var httpClient 		= require('./http-client').httpClient;
 var endpoints 		= require('../config/endpoints');
@@ -26,6 +29,8 @@ var ENDPOINTS_GET_USERLIST		= endpoints.wchat_get_userlist;
 var ENDPOINTS_GET_USERINFO		= endpoints.wchat_get_userinfo;
 
 var ENDPOINTS_GET_USER_ACCESS_TOKEN		= endpoints.wchat_get_user_access_token;
+
+var ENDPOINTS_PAY_UNIFIEDORDER			= endpoints.wchat_pay_unifiedorder;
 
 
 
@@ -513,6 +518,160 @@ function getUserInfo(openid, lang, callback) {
 	});
 }
 
+function unifiedOrder(params, callback) {
+
+	var sign 			= '';
+	var paramsArr 		= [];
+	var paramsString 	= null;
+	var paramsXML 		= null;
+
+	var theParams 		= {
+		appid 				: globalCOnfig.wchat_damiaa_appid,
+		mch_id 				: globalCOnfig.merchant_id,
+		nonce_str 			: uuid.v4().replace(/\D/g, '').substring(1,11),
+		body 				: 'AA精米 2015特级新米',								//
+		out_trade_no 		: '4234234234234326666',								//
+		total_fee 			: 800,												//
+		spbill_create_ip 	: '123.12.12.123',
+		notify_url 			: 'http://wchat.damiaa.com/accept-notify-pay/',
+		trade_type 			: 'JSAPI',
+		userid 				: 'userid',											//
+		openid 				: 'ofnVVw9aVxkxSfvvW373yuMYT7fs'					// 
+	};
+
+	theParams 	= _.extend(theParams, params);
+
+	paramsArr.push('appid=' + theParams.appid);
+	paramsArr.push('mch_id=' + theParams.mch_id);
+	paramsArr.push('nonce_str=' + theParams.nonce_str);
+	//paramsArr.push('sign=' + appid);
+	paramsArr.push('body=' + theParams.body);
+	paramsArr.push('out_trade_no=' + theParams.out_trade_no);
+	paramsArr.push('total_fee=' + theParams.total_fee);
+	paramsArr.push('spbill_create_ip=' + theParams.spbill_create_ip);
+	paramsArr.push('notify_url=' + theParams.notify_url);
+	paramsArr.push('trade_type=' + theParams.trade_type);
+	paramsArr.push('attach=' + theParams.userid);					// 用户编号作为附加数据
+	paramsArr.push('openid=' + theParams.openid);
+
+
+	paramsString 	= _.sortBy(paramsArr, function(a){return a}).join('&') + "&key=" + globalCOnfig.pay_api_key;
+	sign 			= crypto.createHash('md5').update(new Buffer(paramsString)).digest("hex").toUpperCase();	   
+		
+	paramsXML 	= '<xml>';
+
+	for (var i = 0; i < paramsArr.length; i++) {
+		paramsXML 	+= ('<' + paramsArr[i].substring(0, paramsArr[i].indexOf('=')) + '>' + paramsArr[i].substring(paramsArr[i].indexOf('=')+1) + '</' + paramsArr[i].substring(0, paramsArr[i].indexOf('=')) + '>');
+	};
+
+	paramsXML 	+= ('<sign>' + sign + '</sign></xml>');
+
+
+
+	httpClient(ENDPOINTS_PAY_UNIFIEDORDER
+				, {contentType:'xml', content:paramsXML}, 'post', null, function(error, result) {
+
+		if (error) return callback(error);
+
+		if (result.errcode) {
+			return callback(result);
+		}
+
+		var jsonResult 	= JSON.parse(xml2json.toJson(result)).xml;
+
+		if (jsonResult.result_code.toUpperCase() == 'SUCCESS' && jsonResult.return_code.toUpperCase() == 'SUCCESS') {
+			return callback(null, jsonResult);
+		} else {
+			return callback(jsonResult);
+		}
+
+		// <xml>
+		// 	<return_code><![CDATA[SUCCESS]]></return_code>
+		// 	<return_msg><![CDATA[OK]]></return_msg>
+		// 	<appid><![CDATA[wxbfbeee15bbe621e6]]></appid>
+		// 	<mch_id><![CDATA[1315577401]]></mch_id>
+		// 	<nonce_str><![CDATA[0CFI9qPrHhgPdgVk]]></nonce_str>
+		// 	<sign><![CDATA[63D5017DDA96BD66F9D3370D584A816B]]></sign>
+		// 	<result_code><![CDATA[SUCCESS]]></result_code>
+		// 	<prepay_id><![CDATA[wx201603121921335bdcd1d9f60016849487]]></prepay_id>
+		// 	<trade_type><![CDATA[JSAPI]]></trade_type>
+		// </xml>
+
+		// <xml>
+		// 	<return_code><![CDATA[SUCCESS]]></return_code>
+		// 	<return_msg><![CDATA[OK]]></return_msg>
+		// 	<appid><![CDATA[wxbfbeee15bbe621e6]]></appid>
+		// 	<mch_id><![CDATA[1315577401]]></mch_id>
+		// 	<nonce_str><![CDATA[tFp9KqjkjuO8Co6Q]]></nonce_str>
+		// 	<sign><![CDATA[0DB0A4A7B84A24939EC82F7D58DD2E2B]]></sign>
+		// 	<result_code><![CDATA[SUCCESS]]></result_code>
+		// 	<prepay_id><![CDATA[wx20160312191633047daf3f8e0014125869]]></prepay_id>
+		// 	<trade_type><![CDATA[JSAPI]]></trade_type>
+		// </xml>
+
+		// <xml>
+		// 	<return_code><![CDATA[SUCCESS]]></return_code>
+		// 	<return_msg><![CDATA[OK]]></return_msg>
+		// 	<appid><![CDATA[wxbfbeee15bbe621e6]]></appid>
+		// 	<mch_id><![CDATA[1315577401]]></mch_id>
+		// 	<nonce_str><![CDATA[3GGmkqyhsWetbMOA]]></nonce_str>
+		// 	<sign><![CDATA[410BA9C973BCF11CDD6F66220C9574CB]]></sign>
+		// 	<result_code><![CDATA[SUCCESS]]></result_code>
+		// 	<prepay_id><![CDATA[wx20160312191557957deb81000846691323]]></prepay_id>
+		// 	<trade_type><![CDATA[JSAPI]]></trade_type>
+		// </xml> 
+
+		// <xml>
+		// 	<return_code><![CDATA[SUCCESS]]></return_code>
+		// 	<return_msg><![CDATA[OK]]></return_msg>
+		// 	<appid><![CDATA[wxbfbeee15bbe621e6]]></appid>
+		// 	<mch_id><![CDATA[1315577401]]></mch_id>
+		// 	<nonce_str><![CDATA[SmiVQL1TDIwccZGC]]></nonce_str>
+		// 	<sign><![CDATA[E94CB47A7B2D3A44BCC55C68F9B5BF4A]]></sign>
+		// 	<result_code><![CDATA[SUCCESS]]></result_code>
+		// 	<prepay_id><![CDATA[wx20160312190341a94874a7240369173987]]></prepay_id>
+		// 	<trade_type><![CDATA[JSAPI]]></trade_type>
+		// </xml>
+
+		// <xml>
+		// 	<return_code><![CDATA[SUCCESS]]></return_code>
+		// 	<return_msg><![CDATA[OK]]></return_msg>
+		// 	<appid><![CDATA[wxbfbeee15bbe621e6]]></appid>
+		// 	<mch_id><![CDATA[1315577401]]></mch_id>
+		// 	<nonce_str><![CDATA[BCsMDTfGTslrJmxB]]></nonce_str>
+		// 	<sign><![CDATA[BADE6198BAA4DFB61C851EC776909768]]></sign>
+		// 	<result_code><![CDATA[SUCCESS]]></result_code>
+		// 	<prepay_id><![CDATA[wx2016031218595919d990f9e90764603453]]></prepay_id>
+		// 	<trade_type><![CDATA[JSAPI]]></trade_type>
+		// </xml>
+
+		// <xml>
+		// 	<return_code><![CDATA[SUCCESS]]></return_code>
+		// 	<return_msg><![CDATA[OK]]></return_msg>
+		// 	<appid><![CDATA[wxbfbeee15bbe621e6]]></appid>
+		// 	<mch_id><![CDATA[1315577401]]></mch_id>
+		// 	<nonce_str><![CDATA[y3ZB3037uy049W7I]]></nonce_str>
+		// 	<sign><![CDATA[AB6AC86E270EC60CB9BD235F35D4A08F]]></sign>
+		// 	<result_code><![CDATA[SUCCESS]]></result_code>
+		// 	<prepay_id><![CDATA[wx20160312185453745dd4b5370992309582]]></prepay_id>
+		// 	<trade_type><![CDATA[JSAPI]]></trade_type>
+		// </xml>
+
+		// <xml>
+		// 	<return_code><![CDATA[SUCCESS]]></return_code>
+		// 	<return_msg><![CDATA[OK]]></return_msg>
+		// 	<appid><![CDATA[wxbfbeee15bbe621e6]]></appid>
+		// 	<mch_id><![CDATA[1315577401]]></mch_id>
+		// 	<nonce_str><![CDATA[60FDDHJ7FdL30m8e]]></nonce_str>
+		// 	<sign><![CDATA[DC5247D557229E22B9D1D3CA0219A9BE]]></sign>
+		// 	<result_code><![CDATA[SUCCESS]]></result_code>
+		// 	<prepay_id><![CDATA[wx20160312184656286c8364a80903727171]]></prepay_id>
+		// 	<trade_type><![CDATA[JSAPI]]></trade_type>
+		// </xml>
+
+	});
+}
+
 
 if (require.main == module) {
 	
@@ -575,16 +734,23 @@ if (require.main == module) {
  	// 'ofnVVw9aVxkxSfvvW373yuMYT7fs',
  	// 'ofnVVw5P3o2wAUxaGF-t08JDioYc'
 
-	getUserInfo('ofnVVw9aVxkxSfvvW373yuMYT7fs', null, function(error, result) {
-		if (error) return console.log(error);
-		console.log(result);
-	});
+	// getUserInfo('ofnVVw9aVxkxSfvvW373yuMYT7fs', null, function(error, result) {
+	// 	if (error) return console.log(error);
+	// 	console.log(result);
+	// });
+
+ 	unifiedOrder(null, function(err, result) {
+ 		if (err) return console.log(err, 'unifiedOrder err');
+
+ 		console.log(result, 'unifiedOrder successed.');
+ 	});
 } else {
 	module.exports 	= {
 		getAccessToken: getAccessToken,
 		getIPList: getIPList,
 		joinGroup: joinGroup,
-		getUserAccessToken: getUserAccessToken
+		getUserAccessToken: getUserAccessToken,
+		unifiedOrder:unifiedOrder
 	}
 }
 

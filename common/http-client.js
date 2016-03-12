@@ -7,16 +7,29 @@ var Q       = require('q');
 
 exports.httpClient = function(url, parmas, method, certificate, callback) {
 
-    var parmas     = parmas ? parmas : {};
-    var options = {
+    var parmas      = parmas ? parmas : {};
+
+    var options     = {
         url: typeof(url) == 'object' ? URL.format(url) : url,
-        method: method.toUpperCase(),
-        json: parmas,
-        headers: {
+        method: method.toUpperCase()
+    };
+
+    if (parmas.contentType  == 'xml') {
+        options.headers = {
+            'Content-Type': 'text/xml',
+            'accept': 'text/xml'
+        };
+
+        options.body = parmas.content;
+    } else {
+        options.headers = {
             'Content-Type': 'application/json',
             'accept': 'application/json'
-        }
-    };
+        };
+
+        options.json = parmas.content;
+    }
+
 
     if(certificate){
         var auth = null;

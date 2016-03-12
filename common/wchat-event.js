@@ -1,5 +1,6 @@
-var moment 		= require('moment');
-var wchatAPI 	= require('./wchatapi');
+var moment 			= require('moment');
+var wchatAPI 		= require('./wchatapi');
+var _DAMIAA_API 	= require('./damiaa-api');
 
 
 function onView (message, callback) {
@@ -104,6 +105,9 @@ function onPicWeixin (message, callback) {
 
 
 function onImage (message, callback) {
+
+	// http://mp.weixin.qq.com/wiki/1/6239b44c206cab9145b1d52c67e6c551.html
+
 	// { 
 	// 	tousername: [ 'gh_7a09008c1fd9' ],
 	// 	fromusername: [ 'ofnVVw9aVxkxSfvvW373yuMYT7fs' ],
@@ -119,24 +123,34 @@ function onImage (message, callback) {
 	var fromOpenId 		= message.fromusername[0];
 	var toMasterName 	= message.tousername[0];
 
-	var picurl 			= message.picurl;
+	var picurl 			= message.picurl[0];
 	var mediaid 		= message.mediaid;
+
+	console.log(message, 'onImage event executed.');
 
 	// TODO:
 	// 根据用户 openid 更新用户头像 
+	_DAMIAA_API.uploadImage(fromOpenId, picurl, function(err, result) {
 
-	// http://mp.weixin.qq.com/wiki/1/6239b44c206cab9145b1d52c67e6c551.html
+		var info 	= '上传成功头像.';
 
-	var sendMessage 	='<xml><ToUserName><![CDATA[' 
+		if (err) {
+			info = '上传头像失败. (' + err.message + ')';
+		}
+
+		var sendMessage 	='<xml><ToUserName><![CDATA[' 
 							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
 							+ toMasterName + ']]></FromUserName><CreateTime>' 
 							+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>1</ArticleCount><Articles>'
 							+ '<item><Title><![CDATA[' 
-							+ '上传成功头像.' + ']]></Title><PicUrl><![CDATA[' 
+							+ info + ']]></Title><PicUrl><![CDATA[' 
 							+ picurl + ']]></PicUrl><Url><![CDATA[' 
 							+ picurl + ']]></Url></item></Articles></xml>';
 
-	return callback(null, sendMessage);
+		return callback(err, sendMessage);
+
+	});
+
 }
 
 function onText(message, callback) {
@@ -215,7 +229,21 @@ function onPush (message, callback) {
 
 
 if (require.main == module) {
-	
+
+	// onImage( { 
+	// 	tousername: [ 'gh_7a09008c1fd9' ],
+	// 	fromusername: [ 'ofnVVw9aVxkxSfvvW373yuMYT7fs' ],
+	// 	createtime: [ '1457358458' ],
+	// 	msgtype: [ 'image' ],
+	// 	picurl: [ 'http://mmbiz.qpic.cn/mmbiz/LkTJ6asKHQwhYr7eZPvI9fr3pKWr3eNnzwOvnbZob9diblctbu1hMISCx9qvsfXPYAX2pDGrHYMjMLPmsiapg2GA/0' ],
+	// 	msgid: [ '6259306916066696646' ],
+	// 	mediaid: [ 'QBnPKfd7qM6r1YJA63PZxool1XyDfL7ADBXRB3N3ftR-tvlW2ugzSc4Z0Up1Os6t' ] 
+	// }, function(err, result) {
+	// 	if (err) return console.log(err, 'onImage err');
+
+	// 	console.log(result, 'onImage success');
+	// });
+
 } else {
 	module.exports 	= {
 		onPush: onPush

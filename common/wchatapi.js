@@ -575,7 +575,7 @@ if (require.main == module) {
  	// 'ofnVVw9aVxkxSfvvW373yuMYT7fs',
  	// 'ofnVVw5P3o2wAUxaGF-t08JDioYc'
 
-	getUserInfo('ofnVVw8L9-OAibNXOsofdhOQrSko', null, function(error, result) {
+	getUserInfo('ofnVVw9aVxkxSfvvW373yuMYT7fs', null, function(error, result) {
 		if (error) return console.log(error);
 		console.log(result);
 	});

@@ -39,7 +39,7 @@ var globalConfig 	= {
 	wchat_damiaa_appid: 'wxbfbeee15bbe621e6',	
 	wchat_damiaa_secret: 'bce17ac69d41807ccfcdeb639a39e008',
 	
-	current_access_token: 'vx40n05GGYUaiXLanZ_ILOhaWSb78WL4AHOttr72r4VCkWHfBpRYmU6FHVg5K5Gnp0NGmo1TAY0mfHT0ukoxvfDc91AktuH2ZqgJbI7NTXq4AKzq_tCOn60izvctnB6kINEcAGASXO',
+	current_access_token: 'JF5hisqFWBs6S0wzbuFO6_MWz6WHDMLbGk0exoU1biC_Pwwf_hFFMowlN81Qh1tG-SlzeYLT7xuRng12OF-ThC6naFWGlYKuATy80c0uuwpWXGd7HAWOFl-GCTMdxSM0TAQiAIAIPF',
 
 	menuKeys: {
 		KEY_UploadHeadPhoto: 'K_upload_head_photo', 			// 上传头像

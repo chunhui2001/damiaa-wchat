@@ -27,7 +27,8 @@ switch(process.env.NODE_ENV) {
 
 
 
-var globalConfig 	= {
+var globalConfig 	= {	
+	ENVIRONMENT: 'local',
 	PORT: '8108',
 	DAMIAA_API_HOSTNAME: 'api-staging.damiaa.com',
 	STATIC_SERVER_HOSTNAME: 'static-local.damiaa.com',
@@ -38,7 +39,7 @@ var globalConfig 	= {
 	wchat_damiaa_appid: 'wxbfbeee15bbe621e6',	
 	wchat_damiaa_secret: 'bce17ac69d41807ccfcdeb639a39e008',
 	
-	current_access_token: 'UL1aQM4_JD1cK2VLEmjRomnrAYDJUWWtn2nZ9XZ_KuiJBD3cHrWynUYzsR4kb8RxvE7R5SkEVmExmz97gQ6WFKjX7IerIy0DMUXEjI8e1dFPeNuAOGnlppLglUkOh1obHZHbABALDL',
+	current_access_token: 'vx40n05GGYUaiXLanZ_ILOhaWSb78WL4AHOttr72r4VCkWHfBpRYmU6FHVg5K5Gnp0NGmo1TAY0mfHT0ukoxvfDc91AktuH2ZqgJbI7NTXq4AKzq_tCOn60izvctnB6kINEcAGASXO',
 
 	menuKeys: {
 		KEY_UploadHeadPhoto: 'K_upload_head_photo', 			// 上传头像

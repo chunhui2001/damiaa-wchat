@@ -32,6 +32,11 @@ var R_KEY_ACCESS_TOKEN 	= globalConfig.R_KEY_ACCESS_TOKEN;
 */
 
 function worker(redisClient) {
+	if (globalConfig.ENVIRONMENT != 'production') {
+		console.log(moment().format("YYYY/MM/DD HH:mm:ss"));
+	    console.log('The current access token is: ' + globalConfig.current_access_token);
+		return;
+	}
 
 	// get a new accesstoken
 	_REFRESH_TOKEN(function (err, result) {
@@ -45,7 +50,7 @@ function worker(redisClient) {
 		redisClient.set(R_KEY_ACCESS_TOKEN, result.access_token, function (err, reply) {
     	
 	    	console.log('A new access token store to redis: ' + result.access_token);
-	    	redisClient.expire(R_KEY_ACCESS_TOKEN, 720);
+	    	//redisClient.expire(R_KEY_ACCESS_TOKEN, 720);
 	    });
 	});
 	

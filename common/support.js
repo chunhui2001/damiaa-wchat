@@ -8,6 +8,13 @@ var isOpen 				= false;
 
 
 function fetchAccessToken(callback) {
+
+	if (globalConfig.ENVIRONMENT != 'production') {
+		return callback(null, globalConfig.current_access_token);
+		return;
+	}
+
+
 	if (!isOpen) {
 		_REDISCLIENT.on('connect', function(err) {
 			isOpen = true;

@@ -4,6 +4,7 @@ var http    = require('http');
 var request = require('request');
 var URL     = require('url');
 var Q       = require('q');
+var _       = require('underscore');
 
 exports.httpClient = function(url, parmas, method, certificate, callback) {
 
@@ -53,7 +54,7 @@ exports.httpClient = function(url, parmas, method, certificate, callback) {
         }
 
         try {               
-            var info = body;
+            var info = _.isString(body) ? JSON.parse(body) : body;
 
             if (info.message && info.message.indexOf('Invalid access token') != -1) {
                 var theError    = {error: true, message: info.message, data: null};

@@ -161,7 +161,7 @@ app.post("/unifiedorder", function(req, res) {
 	// should be get authentication and validate token exists 
 
 
-	var sendResult  = {error: false, message: null, data: {code:code, grant_type: grantType}};
+	var sendResult  = {error: false, message: null, data: null};
 
 	// var theParams 		= {
 	// 	body 			: currentOrder, 			// 'AA精米 特级米 现磨现卖'
@@ -173,10 +173,10 @@ app.post("/unifiedorder", function(req, res) {
 
 	wchatAPI.unifiedOrder(req.orderParams, function(err, result) {
 
-		sendResult.error 	= err ? true;
+		sendResult.error 	= err ? true : false;
 		sendResult.data 	= err ? err : result;
 		sendResult.message 	= err ? '创建预支付订单失败！' : '创建预支付订单成功。';
-    
+		
     	res.json(sendResult);
 	});
 });

@@ -29,7 +29,7 @@ switch(process.env.NODE_ENV) {
 
 var globalConfig 	= {	
 	ENVIRONMENT: 'local',
-	PORT: '8108',
+	PORT: '8009',
 	DAMIAA_API_HOSTNAME: 'api-staging.damiaa.com',
 	STATIC_SERVER_HOSTNAME: 'static-local.damiaa.com',
 

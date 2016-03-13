@@ -5,12 +5,12 @@ var uuid 		= require('node-uuid');
 
 var httpClient 		= require('./http-client').httpClient;
 var endpoints 		= require('../config/endpoints');
-var globalCOnfig 	= require('../config/global');
+var globalConfig 	= require('../config/global');
 
 var _FETCH_TOKEN 	= require('./support').fetchAccessToken;
 
-var accessToken		= globalCOnfig.current_access_token;
-var MENU_KEYS		= globalCOnfig.menuKeys;
+var accessToken		= globalConfig.current_access_token;
+var MENU_KEYS		= globalConfig.menuKeys;
 
 var ENDPOINTS_GET_ACCESS 	= endpoints.wchat_get_access_token;
 var ENDPOINTS_IP_LIST 		= endpoints.wchat_ip_list;
@@ -25,11 +25,10 @@ var ENDPOINTS_JOIN_GROUP 			= endpoints.wchat_join_group;
 var ENDPOINTS_GET_ALL_GROUPS		= endpoints.wchat_get_all_groups;
 var ENDPOINTS_GET_GROUPID_BYUSER	= endpoints.wchat_get_groupid_by_user
 
-var ENDPOINTS_GET_USERLIST		= endpoints.wchat_get_userlist;
-var ENDPOINTS_GET_USERINFO		= endpoints.wchat_get_userinfo;
+var ENDPOINTS_GET_USERLIST			= endpoints.wchat_get_userlist;
+var ENDPOINTS_GET_USERINFO			= endpoints.wchat_get_userinfo;
 
 var ENDPOINTS_GET_USER_ACCESS_TOKEN		= endpoints.wchat_get_user_access_token;
-
 var ENDPOINTS_PAY_UNIFIEDORDER			= endpoints.wchat_pay_unifiedorder;
 
 
@@ -519,15 +518,17 @@ function getUserInfo(openid, lang, callback) {
 }
 
 function unifiedOrder(params, callback) {
-
+	// https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_4
+	// https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
+	// 
 	var sign 			= '';
 	var paramsArr 		= [];
 	var paramsString 	= null;
 	var paramsXML 		= null;
 
 	var theParams 		= {
-		appid 				: globalCOnfig.wchat_damiaa_appid,
-		mch_id 				: globalCOnfig.merchant_id,
+		appid 				: globalConfig.wchat_damiaa_appid,
+		mch_id 				: globalConfig.merchant_id,
 		nonce_str 			: uuid.v4().replace(/\D/g, '').substring(1,11),
 		body 				: 'AA精米 2015特级新米',								//
 		out_trade_no 		: '4234234234234326666',								//
@@ -540,6 +541,7 @@ function unifiedOrder(params, callback) {
 	};
 
 	theParams 	= _.extend(theParams, params);
+
 
 	paramsArr.push('appid=' + theParams.appid);
 	paramsArr.push('mch_id=' + theParams.mch_id);
@@ -555,7 +557,7 @@ function unifiedOrder(params, callback) {
 	paramsArr.push('openid=' + theParams.openid);
 
 
-	paramsString 	= _.sortBy(paramsArr, function(a){return a}).join('&') + "&key=" + globalCOnfig.pay_api_key;
+	paramsString 	= _.sortBy(paramsArr, function(a){return a}).join('&') + "&key=" + globalConfig.pay_api_key;
 	sign 			= crypto.createHash('md5').update(new Buffer(paramsString)).digest("hex").toUpperCase();	   
 		
 	paramsXML 	= '<xml>';
@@ -580,6 +582,9 @@ function unifiedOrder(params, callback) {
 		var jsonResult 	= JSON.parse(xml2json.toJson(result)).xml;
 
 		if (jsonResult.result_code.toUpperCase() == 'SUCCESS' && jsonResult.return_code.toUpperCase() == 'SUCCESS') {
+			// TODO
+			// 应该验证签名是否正确
+			// ..
 			return callback(null, jsonResult);
 		} else {
 			return callback(jsonResult);

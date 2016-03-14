@@ -5,10 +5,23 @@ var _DAMIAA_API_ENDPOINTS 		= require('../config/endpoints-damiaapi-basic');
 var _CUSTOMER_TOKEN 			= 'BudbXmq1bgnyJWXL';
 var _ENDPOINTS_UPLOAD_IMAGE 	= _DAMIAA_API_ENDPOINTS.upload_image;
 var _ENDPOINTS_GET_OPENID 		= _DAMIAA_API_ENDPOINTS.get_openid;
-var _ENDPOINTS_VALIDATE_ORDER	= _DAMIAA_API_ENDPOINTS.validate_order;
+var _ENDPOINTS_VALIDATE_ORDER		= _DAMIAA_API_ENDPOINTS.validate_order;
+var _ENDPOINTS_PAYMENT_COMPLEMENT	= _DAMIAA_API_ENDPOINTS.payment_complement;
 
 
+function paymentComplement(userid, openid, orderid, paymentInfo, callback) {
+	_HTTP_CLIENT(_ENDPOINTS_PAYMENT_COMPLEMENT, {
+		userid: userid, openid: openid, orderid: orderid, paymentInfo: paymentInfo
+	}, 'post', null, function(error, result) {
+		if (error) return callback(error);
 
+		if (result.error) {
+			return callback(result);
+		}
+
+		return callback(null, result);
+	});
+}
 
 
 function uploadImage (openid, imguri, callback) {
@@ -61,6 +74,7 @@ if (require.main == module) {
 	module.exports = {
 		uploadImage: uploadImage,
 		getOpenId: getOpenId,
-		validateOrder: validateOrder
+		validateOrder: validateOrder,
+		paymentComplement:paymentComplement
 	}
 }

@@ -28,7 +28,7 @@ exports.httpClient = function(url, parmas, method, certificate, callback) {
             'accept': 'application/json'
         };
 
-        options.json = parmas.content;
+        options.json = parmas;
     }
 
 

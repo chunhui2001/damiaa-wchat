@@ -5,6 +5,7 @@ var crypto 		= require('crypto');
 var redis 		= require('redis');
 var moment 		= require('moment');
 var uuid 		= require('uuid');
+var xml2json 	= require('xml2json');
 
 var globalConfig 	= require('./config/global');
 var wchatEvent 		= require('./common/wchat-event');
@@ -220,6 +221,98 @@ app.post("/accept-notify-pay", function(req, res) {
 	//   <trade_type><![CDATA[JSAPI]]></trade_type>								// JSAPI、NATIVE、APP
 	//   <transaction_id><![CDATA[1004400740201409030005092168]]></transaction_id>	// 支付订单号
 	// </xml>
+
+	// <xml>
+	// 	<appid><![CDATA[wxbfbeee15bbe621e6]]></appid>
+	// 	<attach><![CDATA[2c9f9b8f52463e380152463f2d310000]]></attach>
+	// 	<bank_type><![CDATA[CFT]]></bank_type>
+	// 	<cash_fee><![CDATA[1]]></cash_fee>
+	// 	<fee_type><![CDATA[CNY]]></fee_type>
+	// 	<is_subscribe><![CDATA[Y]]></is_subscribe>
+	// 	<mch_id><![CDATA[1315577401]]></mch_id>
+	// 	<nonce_str><![CDATA[9509538490]]></nonce_str>
+	// 	<openid><![CDATA[ofnVVw9aVxkxSfvvW373yuMYT7fs]]></openid>
+	// 	<out_trade_no><![CDATA[7961010630169125186]]></out_trade_no>
+	// 	<result_code><![CDATA[SUCCESS]]></result_code>
+	// 	<return_code><![CDATA[SUCCESS]]></return_code>
+	// 	<sign><![CDATA[5FFA693E8B9ECABEC6E81056243407BA]]></sign>
+	// 	<time_end><![CDATA[20160314211040]]></time_end>
+	// 	<total_fee>1</total_fee>
+	// 	<trade_type><![CDATA[JSAPI]]></trade_type>
+	// 	<transaction_id><![CDATA[1003980736201603143990404855]]></transaction_id>
+	// </xml>
+
+	if (!req.isXml) {
+		res.send('<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[返回数据不是xml格式！]]></return_msg></xml>');
+		return;
+	}
+
+	var rtnDataObj 	= req.body.xml;
+	var rtnDataKey 	= Object.keys(rtnDataObj);
+	var rtnParams 	= [];
+	var rtnParamStr 	= null;
+	var rtnParamSign 	= null;
+
+	rtnDataKey.forEach(function(key) {
+		if (key != 'sign')
+			rtnParams.push(key + '=' + rtnDataObj[key]);
+	});
+
+	rtnParamStr 	= _.sortBy(rtnParams, function(a) { return a; }).join('&') + "&key=" + globalConfig.pay_api_key;
+	rtnParamSign 	= crypto.createHash('md5').update(new Buffer(rtnParamStr)).digest("hex").toUpperCase();	
+
+	if (rtnParamSign != rtnDataObj.sign) {
+		res.send('<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[签名失败！]]></return_msg></xml>');
+		return;
+	}
+
+	var userid 		= rtnDataObj.attach[0];
+	var orderid 	= rtnDataObj.out_trade_no[0];
+	var openid 		= rtnDataObj.openid[0];
+
+
+	if (!(rtnDataObj.result_code[0].toUpperCase() == 'SUCCESS'
+			&& rtnDataObj.return_code[0].toUpperCase() == 'SUCCESS')) {
+		console.log('支付失败！');
+		res.send('<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[支付失败！]]></return_msg></xml>');
+		return;
+	}
+
+	// 检查订单是否存在, 如果存在就更新订单状态 ORDER_STATUS=PENDING
+	// 如果更新返回的结果等于1: 则更新成功, 如果等于0: 说明已经更新过, 本次通知属于重复通知, 如果返回3: 说明该订单不存在
+
+
+	console.log('======================');
+	console.log('接收到支付结果通知！');
+	console.log('======================');
+
+
+	_DAMIAA_API.paymentComplement(userid, openid, orderid, req.rawBody, function(err, result) {
+
+		if (err || result.error) {
+			res.send('<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[更新订单状态失败！]]></return_msg></xml>');
+			return;
+		}
+
+		if (result.data == 3) {
+			res.send('<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[订单不存在！]]></return_msg></xml>');
+			return;
+		}
+
+		if (result.data == 0 || result.data == 1) {
+			if (result.data == 1) {
+				// TODO
+				// 用户支付完成, 需要给管理员发送邮件: 提醒发货
+			}
+
+			res.send('<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>');
+			return;
+		}
+
+		res.send('<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[未知错误！]]></return_msg></xml>');
+		return;
+	});
+
 });
 
 

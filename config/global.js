@@ -31,7 +31,7 @@ var globalConfig 	= {
 	ENVIRONMENT: 'local',
 	PORT: '8009',
 	DAMIAA_API_HOSTNAME: 'api-staging.damiaa.com',
-	STATIC_SERVER_HOSTNAME: 'static-local.damiaa.com',
+	//STATIC_SERVER_HOSTNAME: 'static-local.damiaa.com',
 
 	client_sign_token: 'damiaa0029damiaa0029damiaa0029da',
 	client_encodingAESKey: '368efzUP97lf34owkeVyUqpEceZfkPsCLyFX2Hd17ej',

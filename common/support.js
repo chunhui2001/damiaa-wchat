@@ -1,5 +1,9 @@
 var redis 			= require('redis');
+
+
 var globalConfig 	= require('../config/global');
+var _WCHAT_API 		= require('./wchatapi');
+
 
 var _REDISCLIENT	= redis.createClient("redis://127.0.0.1:6379/2");
 
@@ -11,7 +15,6 @@ function fetchAccessToken(callback) {
 
 	if (['production', 'staging'].indexOf(globalConfig.ENVIRONMENT) == -1) {
 		return callback(null, globalConfig.current_access_token);
-		return;
 	}
 
 
@@ -29,6 +32,21 @@ function fetchAccessToken(callback) {
 }
 
 
+
+
+// if (require.main == module) {
+// 	orderMessageAlert('2345342343', function(err, callback) {
+// 		console.log(err || callback);
+// 	});
+// } else {
+// 	module.exports = {
+// 		fetchAccessToken: fetchAccessToken,
+// 		orderMessageAlert: orderMessageAlert
+// 	}
+// }
+
+
 module.exports = {
 	fetchAccessToken: fetchAccessToken
 }
+

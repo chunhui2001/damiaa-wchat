@@ -31,6 +31,8 @@ var ENDPOINTS_GET_USERINFO			= endpoints.wchat_get_userinfo;
 var ENDPOINTS_GET_USER_ACCESS_TOKEN		= endpoints.wchat_get_user_access_token;
 var ENDPOINTS_PAY_UNIFIEDORDER			= endpoints.wchat_pay_unifiedorder;
 
+var ENDPOINTS_SEND_MESSAGE			= endpoints.wchat_send_message;
+
 
 
 function getUserAccessToken(code, grantType, callback) {
@@ -605,6 +607,52 @@ function unifiedOrder(params, callback) {
 	});
 }
 
+function sendMessage(toOpenid, msgtype, data, callback) {
+	// http://mp.weixin.qq.com/wiki/11/c88c270ae8935291626538f9c64bd123.html
+
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
+		}
+
+		var body = {
+			"touser": toOpenid,
+    		"msgtype": msgtype
+		};
+
+		body[msgtype] 	= data;
+
+		var currentToken 	= result;
+		console.log(currentToken);
+		httpClient(ENDPOINTS_SEND_MESSAGE
+					  .replace('{{{ACCESS_TOKEN}}}', currentToken)
+					, body, 'post', null, function(error, result) {
+
+			if (error) return callback(error);
+
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			return callback(null, result);
+		});
+	});
+}
+
+
+
+function orderMessageAlert(orderid, callback) {
+
+	var content 	= '你有一个新订单, 订单号: ' + orderid;
+
+	// 发送文本消息
+	sendMessage('ofnVVw9aVxkxSfvvW373yuMYT7fs', 'text', {
+			         "content": content
+			    }, callback);
+}
+
 
 if (require.main == module) {
 	
@@ -672,18 +720,58 @@ if (require.main == module) {
 	// 	console.log(result);
 	// });
 
- 	unifiedOrder(null, function(err, result) {
- 		if (err) return console.log(err, 'unifiedOrder err');
+ 	// unifiedOrder(null, function(err, result) {
+ 	// 	if (err) return console.log(err, 'unifiedOrder err');
 
- 		console.log(result, 'unifiedOrder successed.');
- 	});
+ 	// 	console.log(result, 'unifiedOrder successed.');
+ 	// });
+
+
+	// 发送文本消息
+	// sendMessage('ofnVVw9aVxkxSfvvW373yuMYT7fs', 'text', {
+	// 		         "content":"Hello World<br />hhh"
+	// 		    }, function(err, result) {
+	//     if (err) return console.log(err);
+
+	//     console.log(result);
+ //    });
+
+
+	// 发送图文消息
+	// sendMessage('ofnVVw9aVxkxSfvvW373yuMYT7fs', 'news', {
+ //        "articles": [
+ //         {
+ //             "title":"Happy Day",
+ //             "description":"Is Really A Happy Day",
+ //             "url":"http://mmbiz.qpic.cn/mmbiz/LkTJ6asKHQyNgzAFdubQeBkz2Yvx0HPNHvg6dPFpEBd8shVQMeP1BARvxIhI7tic906biafC4jxSDJjCMK8Ufk0A/0",
+ //             "picurl":"http://mmbiz.qpic.cn/mmbiz/LkTJ6asKHQyNgzAFdubQeBkz2Yvx0HPNHvg6dPFpEBd8shVQMeP1BARvxIhI7tic906biafC4jxSDJjCMK8Ufk0A/0"
+ //         },
+ //         {
+ //             "title":"Happy Day2",
+ //             "description":"Is Really A Happy Day2",
+ //             "url":"http://mmbiz.qpic.cn/mmbiz/LkTJ6asKHQyNgzAFdubQeBkz2Yvx0HPNHvg6dPFpEBd8shVQMeP1BARvxIhI7tic906biafC4jxSDJjCMK8Ufk0A/0",
+ //             "picurl":"http://mmbiz.qpic.cn/mmbiz/LkTJ6asKHQyNgzAFdubQeBkz2Yvx0HPNHvg6dPFpEBd8shVQMeP1BARvxIhI7tic906biafC4jxSDJjCMK8Ufk0A/0"
+ //         }
+ //         ]
+ //    }, function(err, result) {
+	//     if (err) return console.log(err);
+
+	//     console.log(result);
+ //    });
+
+	orderMessageAlert('2345342343', function(err, callback) {
+		console.log(err || callback);
+	});
+
 } else {
 	module.exports 	= {
 		getAccessToken: getAccessToken,
 		getIPList: getIPList,
 		joinGroup: joinGroup,
 		getUserAccessToken: getUserAccessToken,
-		unifiedOrder:unifiedOrder
+		unifiedOrder: unifiedOrder,
+		sendMessage: sendMessage,
+		orderMessageAlert: orderMessageAlert
 	}
 }
 

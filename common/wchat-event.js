@@ -126,8 +126,6 @@ function onImage (message, callback) {
 	var picurl 			= message.picurl[0];
 	var mediaid 		= message.mediaid;
 
-	console.log(message, 'onImage event executed.');
-
 	// TODO:
 	// 根据用户 openid 更新用户头像 
 	_DAMIAA_API.uploadImage(fromOpenId, picurl, function(err, result) {
@@ -137,6 +135,7 @@ function onImage (message, callback) {
 		if (err) {
 			info = '上传头像失败. (' + err.message + ')';
 		}
+
 
 		var sendMessage 	='<xml><ToUserName><![CDATA[' 
 							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 

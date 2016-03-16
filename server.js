@@ -303,7 +303,19 @@ app.post("/accept-notify-pay", function(req, res) {
 			if (result.data == 1) {
 				// TODO
 				// 用户支付完成, 需要给管理员发送邮件: 提醒发货
+				wchatAPI.orderMessageAlert(orderid, function(err, result) {
+					
+					if (err) {
+						console.log('发送提醒信息失败!');
+					}
+
+					if (result) {
+						console.log(result);
+					}
+				});
 			}
+
+
 
 			res.send('<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>');
 			return;

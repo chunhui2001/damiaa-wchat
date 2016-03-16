@@ -47,5 +47,8 @@ module.exports = {
 	wchat_get_groupid_by_user: 'https://api.weixin.qq.com/cgi-bin/groups/getid?access_token={{{ACCESS_TOKEN}}}',
 
 	// 统一下单API
-	wchat_pay_unifiedorder: 'https://api.mch.weixin.qq.com/pay/unifiedorder'
+	wchat_pay_unifiedorder: 'https://api.mch.weixin.qq.com/pay/unifiedorder',
+
+	// 发送消息
+	wchat_send_message: 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token={{{ACCESS_TOKEN}}}'
 }

@@ -29,6 +29,7 @@ function uploadImage (openid, imguri, callback) {
 	_HTTP_CLIENT(_ENDPOINTS_UPLOAD_IMAGE, {
 		uri: imguri, uploadType: 'headimg', unionid: null, openid: openid, customerToken: _CUSTOMER_TOKEN
 	}, 'post', null, function(error, result) {
+		
 		if (error) return callback(error);
 
 		if (result.error) {

@@ -7,6 +7,7 @@ var _ENDPOINTS_UPLOAD_IMAGE 	= _DAMIAA_API_ENDPOINTS.upload_image;
 var _ENDPOINTS_GET_OPENID 		= _DAMIAA_API_ENDPOINTS.get_openid;
 var _ENDPOINTS_VALIDATE_ORDER		= _DAMIAA_API_ENDPOINTS.validate_order;
 var _ENDPOINTS_PAYMENT_COMPLEMENT	= _DAMIAA_API_ENDPOINTS.payment_complement;
+var _ENDPOINTS_GET_ORDERS			= _DAMIAA_API_ENDPOINTS.get_orders;
 
 
 function paymentComplement(userid, openid, orderid, paymentInfo, callback) {
@@ -68,6 +69,20 @@ function validateOrder (openid, prepayid, token, tokenType, callback) {
 	});
 }
 
+function getOrderList (callback) {
+	_HTTP_CLIENT(
+		_ENDPOINTS_GET_ORDERS
+		, {token: 'BudbXmq1bgnyJWXL'}, 'post', null, function(error, result) {
+		if (error) return callback(error);
+
+		if (result.error) {
+			return callback(result);
+		}
+
+		return callback(null, result.data);
+	});
+}
+
 
 if (require.main == module) {
 
@@ -76,6 +91,7 @@ if (require.main == module) {
 		uploadImage: uploadImage,
 		getOpenId: getOpenId,
 		validateOrder: validateOrder,
-		paymentComplement:paymentComplement
+		paymentComplement: paymentComplement,
+		getOrderList: getOrderList
 	}
 }

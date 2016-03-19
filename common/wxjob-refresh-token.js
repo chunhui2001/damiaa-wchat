@@ -60,14 +60,18 @@ function worker(redisClient) {
 function refreshToken(redisClient) {	
 
     console.log('connect to redis successful');
+	console.log('');
  	console.log('A Refresh Token job is working at ' + moment().format("YYYY/MM/DD HH:mm:ss"));
+	console.log('==============================================================================');
 
  	worker(redisClient);
 
 	
 	var job = new CronJob('0 */1 * * *', function() {
 	  
+		console.log('');
  		console.log('A Refresh Token job is working at ' + moment().format("YYYY/MM/DD HH:mm:ss"));
+		console.log('==============================================================================');
  		worker(redisClient);
 
 	}, function () {

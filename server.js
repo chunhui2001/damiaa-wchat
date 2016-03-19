@@ -32,6 +32,7 @@ var redisClient 	= redis.createClient("redis://127.0.0.1:6379/2");
 redisClient.on('connect', function(err) {
 	if (err) return console.log('Try to connect to redis server failed, ' + err);	
 	require('./common/wxjob-refresh-token').refreshToken(redisClient); 
+	require('./common/cronjob-refresh-order').refreshOrder(); 
 });
 
 var app = express();

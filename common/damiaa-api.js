@@ -1,3 +1,5 @@
+var _ 		= require('underscore');
+
 var _HTTP_CLIENT 				= require('./http-client').httpClient;
 var _DAMIAA_API_ENDPOINTS 		= require('../config/endpoints-damiaapi-basic');
 
@@ -8,6 +10,7 @@ var _ENDPOINTS_GET_OPENID 		= _DAMIAA_API_ENDPOINTS.get_openid;
 var _ENDPOINTS_VALIDATE_ORDER		= _DAMIAA_API_ENDPOINTS.validate_order;
 var _ENDPOINTS_PAYMENT_COMPLEMENT	= _DAMIAA_API_ENDPOINTS.payment_complement;
 var _ENDPOINTS_GET_ORDERS			= _DAMIAA_API_ENDPOINTS.get_orders;
+var _ENDPOINTS_PUSH_EVENTS			= _DAMIAA_API_ENDPOINTS.push_events;
 
 
 function paymentComplement(userid, openid, orderid, paymentInfo, callback) {
@@ -83,6 +86,29 @@ function getOrderList (callback) {
 	});
 }
 
+function pushEvents(deliveryStatus, orderid, userid, openid, events, callback) {
+	var params  = {
+		token: 'BudbXmq1bgnyJWXL', 
+		orderid: orderid,
+		userid: userid,
+		openid: openid
+	};
+
+	params = _.extend(params, events);
+
+	_HTTP_CLIENT(
+		_ENDPOINTS_PUSH_EVENTS.replace('{{{deliveryStatus}}}', deliveryStatus)
+		, params, 'post', null, function(error, result) {
+		if (error) return callback(error);
+
+		if (result.error) {
+			return callback(result);
+		}
+		
+		return callback(null, result.data);
+	});
+}
+
 
 if (require.main == module) {
 
@@ -92,6 +118,7 @@ if (require.main == module) {
 		getOpenId: getOpenId,
 		validateOrder: validateOrder,
 		paymentComplement: paymentComplement,
-		getOrderList: getOrderList
+		getOrderList: getOrderList,
+		pushEvents: pushEvents
 	}
 }

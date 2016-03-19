@@ -53,12 +53,12 @@ function worker() {
 
 	_DAMIAA_API.getOrderList(function(err, result) {
 		if (err) {
-			console.log('取得订单列表时报错');
+			console.log(err, '取得订单列表时报错');
 			return;
 		}
 
 		if (!result || result.length == 0) {
-			console.log('未能取得订单列表！');
+			console.log('当前时间没有新的订单列表！' + moment().format("YYYY-MM-DD HH:mm:ss"));
 			return;
 		}
 
@@ -66,7 +66,7 @@ function worker() {
 			var orderid 		= order.id;
 			var userid 			= order.userId;
 			var openid 			= order.openId;
-			var lastEventTime 	= moment(order.lastEventTime).format("YYYY/MM/DD HH:mm:ss");
+			var lastEventTime 	= order.lastEventTime ? moment(order.lastEventTime) : false;
 
 			var deliveryNo 	= order.deliveryNo;
 			var companyName	= order.deliveryCompany;
@@ -89,22 +89,51 @@ function worker() {
 					// 当快递接口返回的状态是签收(9)时，　发送邮件给客服人员
 					// 当快递接口返回的状态是签收(3或4)时，　更新订单的状态为onDelivery
 
-					var contextList 	= [];
+					var eventObj 		= {};
+
+					// deliveryInfo = [
+					//     { "time": "2016-03-27 15:21:50",
+					//       "context": "已签收,本人 收【外冈邮政支局】【外冈邮政支局】" },
+					//     { "time": "2016-03-26 16:22:25",
+					//       "context": "次日再投【外冈邮政支局】【外冈邮政支局】" },
+					//     { "time": "2016-03-26 10:07:58",
+					//       "context": "【外冈邮政支局】正在投递,投递员：朱勤明 15821022358【外冈邮政支局】" },
+					//     { "time": "2016-03-25 10:03:27",
+					//       "context": "到达【外冈邮政支局】【外冈邮政支局】" },
+					//     { "time": "2016-03-24 07:08:43",
+					//       "context": "离开【上海郊区】，下一站【嘉定外冈】【上海郊区】" },
+					//     { "time": "2016-03-23 05:43:28",
+					//       "context": "离开【上海】，下一站【嘉定转运】【上海】" },
+					//     { "time": "2016-03-22 11:04:00",
+					//       "context": "到达【上海】【上海】" },
+					//     { "time": "2016-03-22 08:54:26",
+					//       "context": "离开【广州】，下一站【上海王港】【广州】" },
+					//     { "time": "2016-03-21 23:27:00",
+					//       "context": "到达【广州】【广州】" },
+					//     { "time": "2016-03-21 19:33:56",
+					//       "context": "离开【珠海】，下一站【广州中心】【珠海】" },
+					//     { "time": "2016-03-21 17:17:00",
+					//       "context": "离开【中国邮政集团公司珠海市金邦达邮局】【中国邮政集团公司珠海市金邦达邮局】" },
+					//     { "time": "2016-03-21 17:06:10",
+					//       "context": "【广东省中国邮政集团公司珠海市金邦达邮局】已经收寄【中国邮政集团公司珠海市金邦达邮局】" },
+					//     { "time": "2016-03-21 06:30:00",
+					//       "context": "到达【珠海】【珠海】" }
+					//   ];
 
 					// 取得 lastEventTime 之后的所有 context
 					deliveryInfo.forEach(function(info) {
-						var infoTime 	= info.time;
+						var infoTime 	= moment(info.time, "YYYY-MM-DD HH:mm:ss");
 						var context 	= info.context;
 
-						if (infoTime > lastEventTime || 1==1) {
-							contextList.push({
-								time: infoTime,
-								context: context
-							})
+						if (!lastEventTime || infoTime.isAfter(lastEventTime)) {
+							eventObj[infoTime.format("YYYY-MM-DD HH:mm:ss")] = context;
 						}
 					});
-
-					console.log(contextList, 11);
+					
+					_DAMIAA_API.pushEvents(deliveryStatus, orderid, userid, openid, eventObj
+						, function(err, result) {
+							console.log(err || result);
+					});
 				}
 			});
 		});
@@ -154,14 +183,18 @@ function getDeliveryInfo(deliveryNo, companyName, callback) {
 
 function refreshOrder() {	
 
+	console.log('');
  	console.log('A Refresh Order job is working at ' + moment().format("YYYY/MM/DD HH:mm:ss"));
+	console.log('==============================================================================');
 
  	worker();
 
 	
 	var job = new CronJob('0 */1 * * *', function() {
 	  
+		console.log('');
  		console.log('A Refresh Order job is working at ' + moment().format("YYYY/MM/DD HH:mm:ss"));
+		console.log('==============================================================================');
  		worker();
 
 	}, function () {

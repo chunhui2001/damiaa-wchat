@@ -167,27 +167,21 @@ function genMenu(meun, callback) {
 					"name":"AA精米",
 					"url":"http://www.damiaa.com/"
 				}, 
-				{
-					"type": "pic_weixin", 
-					"name": "上传头像", 
-					"key": MENU_KEYS.KEY_UploadHeadPhoto, 
-					"sub_button": [ ]
-				}, 
+				// {
+				// 	"type":"view",
+				// 	"name":"历史订单",
+				// 	"url":"http://www.damiaa.com/account-orders"
+				// }, 
 				{
 					"name":"菜单",
-					"sub_button":[ 
-						{	
-						   "type":"view",
-						   "name":"搜索",
-						   "url":"http://www.soso.com/"
+					"sub_button":[ {
+						   "type": "pic_weixin", 
+							"name": "上传头像", 
+							"key": MENU_KEYS.KEY_UploadHeadPhoto, 
 						}, {
-						   "type":"view",
-						   "name":"视频",
-						   "url":"http://v.qq.com/"
-						}, {
-						   "type":"click",
-						   "name":"赞一下我们",
-						   "key": MENU_KEYS.KEY_GOOD
+							"type":"view",
+							"name":"用户登陆",
+							"url":"http://www.damiaa.com/login/"
 						}
 					]
 				}
@@ -251,25 +245,22 @@ function genSpecMenu(specMenu, callback) {
 					"type":"view",
 					"name":"AA精米",
 					"url":"http://www.damiaa.com/"
-				}, 
-				{
-					"type": "pic_weixin", 
-					"name": "上传头像", 
-					"key": MENU_KEYS.KEY_UploadHeadPhoto, 
-					"sub_button": [ ]
-				}, 
+				} , 
+				// {
+				// 	"type":"view",
+				// 	"name":"历史订单",
+				// 	"url":"http://www.damiaa.com/account-orders"
+				// } , 
 				{
 					"name":"菜单",
-					"sub_button":[ 
-						{
-						   "type":"view",
-						   "name":"测试专用",
-						   "url":"http://v.qq.com/"
-						},
-						{
-						   "type":"view",
-						   "name":"视频",
-						   "url":"http://v.qq.com/"
+					"sub_button":[ {
+						   "type": "pic_weixin", 
+							"name": "上传头像", 
+							"key": MENU_KEYS.KEY_UploadHeadPhoto, 
+						}, {
+							"type":"view",
+							"name":"用户登陆",
+							"url":"http://www.damiaa.com/#/login/"
 						}, {
 						   "type":"click",
 						   "name":"BOSS专属",
@@ -681,10 +672,10 @@ if (require.main == module) {
 	// 	console.log(result);
 	// });
 
-	// genSpecMenu(null, function(error, result) {
-	// 	if (error) return console.log(error);
-	// 	console.log(result);
-	// });
+	genSpecMenu(null, function(error, result) {
+		if (error) return console.log(error);
+		console.log(result);
+	});
 
 	// createGroup('developer', function(error, result) {
 	// 	if (error) return console.log(error);
@@ -759,9 +750,9 @@ if (require.main == module) {
 	//     console.log(result);
  //    });
 
-	orderMessageAlert('2345342343', function(err, callback) {
-		console.log(err || callback);
-	});
+	// orderMessageAlert('2345342343', function(err, callback) {
+	// 	console.log(err || callback);
+	// });
 
 } else {
 	module.exports 	= {

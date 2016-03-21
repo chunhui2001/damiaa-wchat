@@ -32,6 +32,7 @@ var ENDPOINTS_GET_USER_ACCESS_TOKEN		= endpoints.wchat_get_user_access_token;
 var ENDPOINTS_PAY_UNIFIEDORDER			= endpoints.wchat_pay_unifiedorder;
 
 var ENDPOINTS_SEND_MESSAGE			= endpoints.wchat_send_message;
+var ENDPOINTS_GET_JSAPI_TICKET		= endpoints.wchat_get_jsapi_ticket;
 
 
 
@@ -616,7 +617,7 @@ function sendMessage(toOpenid, msgtype, data, callback) {
 		body[msgtype] 	= data;
 
 		var currentToken 	= result;
-		console.log(currentToken);
+
 		httpClient(ENDPOINTS_SEND_MESSAGE
 					  .replace('{{{ACCESS_TOKEN}}}', currentToken)
 					, body, 'post', null, function(error, result) {
@@ -642,6 +643,30 @@ function orderMessageAlert(orderid, callback) {
 	sendMessage('ofnVVw9aVxkxSfvvW373yuMYT7fs', 'text', {
 			         "content": content
 			    }, callback);
+}
+
+function getJSAPITicket(callback) {
+
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
+		}
+
+		httpClient(ENDPOINTS_GET_JSAPI_TICKET
+					  .replace('{{{ACCESS_TOKEN}}}', currentToken)
+					, body, 'get', null, function(error, result) {
+
+			if (error) return callback(error);
+
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			return callback(null, result);
+		});
+	});
 }
 
 

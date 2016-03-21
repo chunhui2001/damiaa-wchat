@@ -50,5 +50,6 @@ module.exports = {
 	wchat_pay_unifiedorder: 'https://api.mch.weixin.qq.com/pay/unifiedorder',
 
 	// 发送消息
-	wchat_send_message: 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token={{{ACCESS_TOKEN}}}'
+	wchat_send_message: 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token={{{ACCESS_TOKEN}}}',
+	wchat_get_jsapi_ticket: 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={{{ACCESS_TOKEN}}}&type=jsapi'
 }

@@ -33,6 +33,8 @@ var ENDPOINTS_PAY_UNIFIEDORDER			= endpoints.wchat_pay_unifiedorder;
 
 var ENDPOINTS_SEND_MESSAGE			= endpoints.wchat_send_message;
 var ENDPOINTS_GET_JSAPI_TICKET		= endpoints.wchat_get_jsapi_ticket;
+var ENDPOINTS_GEN_QRCODE_NONEXPIRED = endpoints.wchat_gen_qrcode_nonexpired;
+
 
 
 
@@ -654,9 +656,45 @@ function getJSAPITicket(callback) {
 			return;
 		}
 
+		var currentToken 	= result;
+
 		httpClient(ENDPOINTS_GET_JSAPI_TICKET
 					  .replace('{{{ACCESS_TOKEN}}}', currentToken)
 					, body, 'get', null, function(error, result) {
+
+			if (error) return callback(error);
+
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			return callback(null, result);
+		});
+	});
+}
+
+function genQRCodeNonExpired(scene_id, callback) {	
+
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
+		}
+
+		var currentToken 	= result;
+		console.log(currentToken);
+		httpClient(ENDPOINTS_GEN_QRCODE_NONEXPIRED
+					.replace('{{{ACCESS_TOKEN}}}', currentToken)
+					, {
+						"action_name": "QR_LIMIT_SCENE", 
+						"action_info": {
+							"scene": {
+								"scene_id": scene_id
+							}
+						}
+					}
+					, 'post', null, function(error, result) {
 
 			if (error) return callback(error);
 
@@ -697,10 +735,10 @@ if (require.main == module) {
 	// 	console.log(result);
 	// });
 
-	genSpecMenu(null, function(error, result) {
-		if (error) return console.log(error);
-		console.log(result);
-	});
+	// genSpecMenu(null, function(error, result) {
+	// 	if (error) return console.log(error);
+	// 	console.log(result);
+	// });
 
 	// createGroup('developer', function(error, result) {
 	// 	if (error) return console.log(error);
@@ -778,6 +816,21 @@ if (require.main == module) {
 	// orderMessageAlert('2345342343', function(err, callback) {
 	// 	console.log(err || callback);
 	// });
+
+	genQRCodeNonExpired(30, function(err, result) {
+		console.log(err || result);
+
+		// { 
+		//   ticket: 
+		// 	'gQHk7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2xqZ2pCV0hseGRLOHRvb0dmUlM2AAIE7UfyVgMEAAAAAA==',
+		//   url: 'http://weixin.qq.com/q/ljgjBWHlxdK8tooGfRS6' 
+		// }
+
+
+		// https://mp.weixin.qq.com/cgi-bin/showqrcode?
+		// ticket=gQHk7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2xqZ2pCV0hseGRLOHRvb0dmUlM2AAIE7UfyVgMEAAAAAA==
+
+	});
 
 } else {
 	module.exports 	= {

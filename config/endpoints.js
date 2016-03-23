@@ -51,5 +51,6 @@ module.exports = {
 
 	// 发送消息
 	wchat_send_message: 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token={{{ACCESS_TOKEN}}}',
-	wchat_get_jsapi_ticket: 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={{{ACCESS_TOKEN}}}&type=jsapi'
+	wchat_get_jsapi_ticket: 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={{{ACCESS_TOKEN}}}&type=jsapi',
+	wchat_gen_qrcode_nonexpired: 'https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token={{{ACCESS_TOKEN}}}'
 }

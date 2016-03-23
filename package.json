@@ -27,6 +27,7 @@
     "express-session": "^1.13.0",
     "express-xml-bodyparser": "^0.3.0",
     "moment": "^2.12.0",
+    "node-expat": "^2.3.13",
     "node-uuid": "^1.4.7",
     "q": "^1.4.1",
     "redis": "^2.5.0-1",

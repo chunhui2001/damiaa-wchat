@@ -7,7 +7,68 @@ function onView (message, callback) {
 
 }
 
-function onSubscribe(message, callback) {
+function onSubscribe(message, callback) {	
+	console.log(message, 'onSubscribe');
+
+	// { 
+	// 	tousername: [ 'gh_7a09008c1fd9' ],
+	// 	fromusername: [ 'ofnVVw9aVxkxSfvvW373yuMYT7fs' ],
+	// 	createtime: [ '1458720422' ],
+	// 	msgtype: [ 'event' ],
+	// 	event: [ 'subscribe' ],
+	// 	eventkey: [ 'qrscene_1' ],
+	// 	ticket: [ 'gQHk7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2xqZ2pCV0hseGRLOHRvb0dmUlM2AAIE7UfyVgMEAAAAAA==' ] 
+	// }
+
+	// 可根据 ticket　和 eventKey 关联到具体的经商信息
+
+	// { 
+	// 	tousername: [ 'gh_7a09008c1fd9' ],
+	// 	fromusername: [ 'ofnVVw9aVxkxSfvvW373yuMYT7fs' ],
+	// 	createtime: [ '1458721177' ],
+	// 	msgtype: [ 'event' ],
+	// 	event: [ 'subscribe' ],
+	// 	eventkey: [ '' ] 
+	// }
+
+	var fromOpenId 		= message.fromusername[0];
+	var toMasterName 	= message.tousername[0];
+
+	var content 		= '欢迎关注 "AA精米" 东北大米微信直销平台, 祝您生活愉快.';
+
+	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
+							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+							+ toMasterName + ']]></FromUserName><CreateTime>' 
+							+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
+							+ content
+							+ ']]></Content></xml>';
+
+	wchatAPI.joinGroup(fromOpenId, null, function(err, result) {
+		if (err) console.log(err, "joinGroup ERROR");
+
+		console.log(result, "joinGroup Success");
+		
+		return callback(null, sendMessage);
+	});
+	
+}
+
+
+
+function onScan(message, callback) {
+	console.log(message, 'onScan');
+
+	// { 
+	// 	tousername: [ 'gh_7a09008c1fd9' ],
+	// 	fromusername: [ 'ofnVVw9aVxkxSfvvW373yuMYT7fs' ],
+	// 	createtime: [ '1458719860' ],
+	// 	msgtype: [ 'event' ],
+	// 	event: [ 'SCAN' ],
+	// 	eventkey: [ '1' ],
+	// 	ticket: [ 'gQHk7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2xqZ2pCV0hseGRLOHRvb0dmUlM2AAIE7UfyVgMEAAAAAA==' ] 
+	// }
+
+	// 可在此处实现扫码下单逻辑
 
 	var fromOpenId 		= message.fromusername[0];
 	var toMasterName 	= message.tousername[0];
@@ -28,7 +89,6 @@ function onSubscribe(message, callback) {
 		
 		return callback(null, sendMessage);
 	});
-	
 }
 
 function onUnSubscribe(message, callback) {
@@ -212,8 +272,11 @@ function onPush (message, callback) {
 			case 'subscribe':
 				return onSubscribe(message, callback);
 				break;
+			case 'scan':
+				return onScan(message, callback);
+				break;
 			default:
-				console.log('未能捕捉到事件: ' + message.event[0]);
+				console.log('未能捕捉到事件: ' + message.event[0] + ", " + message.event[0].toLowerCase());
 		}
 	}
 

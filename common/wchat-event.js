@@ -55,6 +55,11 @@ function onSubscribe(message, callback) {
 
 function onScancodeWaitmsg(message, callback) {
 
+	console.log(message, 'onScancodeWaitmsg');
+	console.log(message.scancodeinfo[0]['scanresult'], 'scanresult');
+	console.log(message.scancodeinfo[0]['scantype'], 'scantype');
+	
+
 	var fromOpenId 		= message.fromusername[0];
 	var toMasterName 	= message.tousername[0];
 	var eventKey 		= message.eventkey[0];
@@ -90,13 +95,15 @@ function onScancodeWaitmsg(message, callback) {
 
 			return callback(null, sendMessage);
 		} else {
+			// 1. 根据用户扫面的二维码地址取得该用户关联的商户
+			var qrcodeAddress 	= message.scancodeinfo[0]['scanresult'];
+
 			content 	= '下单成功.';
 		}		
 	}
 
 	content 		= content == null ? '扫码推事件且弹出“消息接收中”提示框' : content;
 
-	console.log(message, 'onScancodeWaitmsg');
 
 	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
 							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
@@ -144,22 +151,41 @@ function onScan(message, callback) {
 	var fromOpenId 		= message.fromusername[0];
 	var toMasterName 	= message.tousername[0];
 
-	var content 		= '欢迎关注 "AA精米" 东北大米微信直销平台, 祝您生活愉快.';
+	var content 		= null;
+	var isReg 			= false;
+
+	if (!isReg) {
+		content 	= '您还没有注册， 请先去注册！';
+
+		var sendMessage 	='<xml><ToUserName><![CDATA[' 
+		+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+		+ toMasterName + ']]></FromUserName><CreateTime>' 
+		+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
+		+ '<item><Title><![CDATA[' 
+		+ content + ']]></Title><PicUrl><![CDATA[' 
+		+ 'http://www.damiaa.com/img/miscellaneous/icon-reg.jpg' + ']]></PicUrl><Url><![CDATA[' 
+		+ 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbfbeee15bbe621e6&redirect_uri=http%3A%2F%2Fwww.damiaa.com%2Fregister&response_type=code&scope=snsapi_base&state=HbYFbj4CAlo72uPw#wechat_redirect' 
+		+ ']]></Url></item>'
+		+ '<item><Title><![CDATA[' 
+		+ '现在就去注册吧.' + ']]></Title><PicUrl><![CDATA[' 
+		+ 'http://www.damiaa.com/img/miscellaneous/icon-reg2.png' + ']]></PicUrl><Url><![CDATA[' 
+		+ 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbfbeee15bbe621e6&redirect_uri=http%3A%2F%2Fwww.damiaa.com%2Fregister&response_type=code&scope=snsapi_base&state=HbYFbj4CAlo72uPw#wechat_redirect' 
+		+ ']]></Url></item></Articles></xml>';
+
+		return callback(null, sendMessage);
+	} else {
+		// 1. 根据用户扫面的二维码地址取得该用户关联的商户
+		var qrcodeTicket 	= message.ticket[0];
+
+		content 	= '下单成功.';
+	}	
 
 	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
-							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
-							+ toMasterName + ']]></FromUserName><CreateTime>' 
-							+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
-							+ content
-							+ ']]></Content></xml>';
-
-	// wchatAPI.joinGroup(fromOpenId, null, function(err, result) {
-	// 	if (err) console.log(err, "joinGroup ERROR");
-
-	// 	console.log(result, "joinGroup Success");
-		
-	// 	return callback(null, sendMessage);
-	// });
+						+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+						+ toMasterName + ']]></FromUserName><CreateTime>' 
+						+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
+						+ content
+						+ ']]></Content></xml>';
 
 	return callback(null, sendMessage);
 }

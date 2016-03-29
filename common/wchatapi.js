@@ -178,6 +178,10 @@ function genMenu(meun, callback) {
 				{
 					"name":"菜单",
 					"sub_button":[ {
+		                    "type": "scancode_waitmsg", 
+		                    "name": "一键扫码下单", 
+		                    "key": MENU_KEYS.KEY_SetupOrder_AUTO
+		                }, {
 						   "type": "pic_weixin", 
 							"name": "上传头像", 
 							"key": MENU_KEYS.KEY_UploadHeadPhoto, 
@@ -186,6 +190,11 @@ function genMenu(meun, callback) {
 							"name":"用户登陆",
 							"url":"http://www.damiaa.com/login/"
 						}
+		                // , {
+		                //     "type": "scancode_push", 
+		                //     "name": "扫码推事件", 
+		                //     "key": "rselfmenu_0_1"
+		                // }
 					]
 				}
 			]
@@ -257,6 +266,10 @@ function genSpecMenu(specMenu, callback) {
 				{
 					"name":"菜单",
 					"sub_button":[ {
+		                    "type": "scancode_waitmsg", 
+		                    "name": "一键扫码下单", 
+		                    "key": MENU_KEYS.KEY_SetupOrder_AUTO
+		                }, {
 						   "type": "pic_weixin", 
 							"name": "上传头像", 
 							"key": MENU_KEYS.KEY_UploadHeadPhoto, 
@@ -269,6 +282,11 @@ function genSpecMenu(specMenu, callback) {
 						   "name":"BOSS专属",
 						   "key": MENU_KEYS.KEY_BOSS
 						}
+		                // , {
+		                //     "type": "scancode_push", 
+		                //     "name": "扫码推事件", 
+		                //     "key": "rselfmenu_0_1"
+		                // }
 					]
 				}
 			],
@@ -735,10 +753,10 @@ if (require.main == module) {
 	// 	console.log(result);
 	// });
 
-	// genSpecMenu(null, function(error, result) {
-	// 	if (error) return console.log(error);
-	// 	console.log(result);
-	// });
+	genSpecMenu(null, function(error, result) {
+		if (error) return console.log(error);
+		console.log(result);
+	});
 
 	// createGroup('developer', function(error, result) {
 	// 	if (error) return console.log(error);
@@ -817,20 +835,20 @@ if (require.main == module) {
 	// 	console.log(err || callback);
 	// });
 
-	genQRCodeNonExpired(30, function(err, result) {
-		console.log(err || result);
+	// genQRCodeNonExpired(30, function(err, result) {
+	// 	console.log(err || result);
 
-		// { 
-		//   ticket: 
-		// 	'gQHk7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2xqZ2pCV0hseGRLOHRvb0dmUlM2AAIE7UfyVgMEAAAAAA==',
-		//   url: 'http://weixin.qq.com/q/ljgjBWHlxdK8tooGfRS6' 
-		// }
+	// 	// { 
+	// 	//   ticket: 
+	// 	// 	'gQHk7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2xqZ2pCV0hseGRLOHRvb0dmUlM2AAIE7UfyVgMEAAAAAA==',
+	// 	//   url: 'http://weixin.qq.com/q/ljgjBWHlxdK8tooGfRS6' 
+	// 	// }
 
 
-		// https://mp.weixin.qq.com/cgi-bin/showqrcode?
-		// ticket=gQHk7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2xqZ2pCV0hseGRLOHRvb0dmUlM2AAIE7UfyVgMEAAAAAA==
+	// 	// https://mp.weixin.qq.com/cgi-bin/showqrcode?
+	// 	// ticket=gQHk7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2xqZ2pCV0hseGRLOHRvb0dmUlM2AAIE7UfyVgMEAAAAAA==
 
-	});
+	// });
 
 } else {
 	module.exports 	= {

@@ -53,7 +53,78 @@ function onSubscribe(message, callback) {
 	
 }
 
+function onScancodeWaitmsg(message, callback) {
 
+	var fromOpenId 		= message.fromusername[0];
+	var toMasterName 	= message.tousername[0];
+	var eventKey 		= message.eventkey[0];
+
+	var content 		= null;
+	var picurl 			= 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQHk7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2xqZ2pCV0hseGRLOHRvb0dmUlM2AAIE7UfyVgMEAAAAAA==';
+
+	// V1001_GOOD
+
+	if (eventKey == 'K_setup_order_auto') {
+		// 1. 根据用户的ｏｐｅｎｉｄ查看是否已经注册
+		// 2. 如果用户没有注册则显示用户注册网页链接
+
+		var isReg 	= false;
+
+		if (!isReg) {
+			content 	= '您还没有注册， 请先去注册！';
+
+			var sendMessage 	='<xml><ToUserName><![CDATA[' 
+							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+							+ toMasterName + ']]></FromUserName><CreateTime>' 
+							+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
+							+ '<item><Title><![CDATA[' 
+							+ content + ']]></Title><PicUrl><![CDATA[' 
+							+ 'http://www.damiaa.com/img/miscellaneous/icon-reg.jpg' + ']]></PicUrl><Url><![CDATA[' 
+							+ 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbfbeee15bbe621e6&redirect_uri=http%3A%2F%2Fwww.damiaa.com%2Fregister&response_type=code&scope=snsapi_base&state=HbYFbj4CAlo72uPw#wechat_redirect' 
+							+ ']]></Url></item>'
+							+ '<item><Title><![CDATA[' 
+							+ '现在就去注册吧.' + ']]></Title><PicUrl><![CDATA[' 
+							+ 'http://www.damiaa.com/img/miscellaneous/icon-reg2.png' + ']]></PicUrl><Url><![CDATA[' 
+							+ 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbfbeee15bbe621e6&redirect_uri=http%3A%2F%2Fwww.damiaa.com%2Fregister&response_type=code&scope=snsapi_base&state=HbYFbj4CAlo72uPw#wechat_redirect' 
+							+ ']]></Url></item></Articles></xml>';
+
+			return callback(null, sendMessage);
+		} else {
+			content 	= '下单成功.';
+		}		
+	}
+
+	content 		= content == null ? '扫码推事件且弹出“消息接收中”提示框' : content;
+
+	console.log(message, 'onScancodeWaitmsg');
+
+	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
+							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+							+ toMasterName + ']]></FromUserName><CreateTime>' 
+							+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
+							+ content
+							+ ']]></Content></xml>';
+
+	return callback(null, sendMessage);
+}
+
+function onScancodePush(message, callback) {
+	console.log(message, 'onScancodePush');
+
+	var fromOpenId 		= message.fromusername[0];
+	var toMasterName 	= message.tousername[0];
+
+	var content 		= '微信客户端将调起扫一扫工具';
+
+	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
+							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+							+ toMasterName + ']]></FromUserName><CreateTime>' 
+							+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
+							+ content
+							+ ']]></Content></xml>';
+
+	return callback(null, sendMessage);
+}
 
 function onScan(message, callback) {
 	console.log(message, 'onScan');
@@ -73,7 +144,7 @@ function onScan(message, callback) {
 	var fromOpenId 		= message.fromusername[0];
 	var toMasterName 	= message.tousername[0];
 
-	var content 		= '欢迎关注 "AA精米" 东北大米微信直销平台, 祝您生活愉快 ：）';
+	var content 		= '欢迎关注 "AA精米" 东北大米微信直销平台, 祝您生活愉快.';
 
 	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
 							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
@@ -82,13 +153,15 @@ function onScan(message, callback) {
 							+ content
 							+ ']]></Content></xml>';
 
-	wchatAPI.joinGroup(fromOpenId, null, function(err, result) {
-		if (err) console.log(err, "joinGroup ERROR");
+	// wchatAPI.joinGroup(fromOpenId, null, function(err, result) {
+	// 	if (err) console.log(err, "joinGroup ERROR");
 
-		console.log(result, "joinGroup Success");
+	// 	console.log(result, "joinGroup Success");
 		
-		return callback(null, sendMessage);
-	});
+	// 	return callback(null, sendMessage);
+	// });
+
+	return callback(null, sendMessage);
 }
 
 function onUnSubscribe(message, callback) {
@@ -149,7 +222,7 @@ function onPicWeixin (message, callback) {
 	var content 		= null;
 
 	if (eventKey == 'K_upload_head_photo') {
-		content 	= '上传头像.';
+		content 	= '弹出微信相册发图器.';
 	}
 
 	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
@@ -255,6 +328,9 @@ function onPush (message, callback) {
 	// image
 	// text
 
+	if (message.msgtype[0] == 'image') return onImage(message, callback);
+	if (message.msgtype[0] == 'text') return onText(message, callback);
+
 	if (message.msgtype[0] == 'event') {
 		switch(message.event[0].toLowerCase()) {
 			case 'view':	
@@ -275,15 +351,16 @@ function onPush (message, callback) {
 			case 'scan':
 				return onScan(message, callback);
 				break;
+			case 'scancode_push':
+				return onScancodePush(message, callback);
+				break;
+			case 'scancode_waitmsg':
+				return onScancodeWaitmsg(message, callback);
+				break;
 			default:
 				console.log('未能捕捉到事件: ' + message.event[0] + ", " + message.event[0].toLowerCase());
 		}
 	}
-
-	if (message.msgtype[0] == 'image') return onImage(message, callback);
-
-	if (message.msgtype[0] == 'text') return onText(message, callback);
-
 
 	// nothing to 
 	// should be send out an email to administrator

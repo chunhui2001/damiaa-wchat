@@ -91,34 +91,6 @@ function worker() {
 
 					var eventObj 		= {};
 
-					// deliveryInfo = [
-					//     { "time": "2016-03-27 15:21:50",
-					//       "context": "已签收,本人 收【外冈邮政支局】【外冈邮政支局】" },
-					//     { "time": "2016-03-26 16:22:25",
-					//       "context": "次日再投【外冈邮政支局】【外冈邮政支局】" },
-					//     { "time": "2016-03-26 10:07:58",
-					//       "context": "【外冈邮政支局】正在投递,投递员：朱勤明 15821022358【外冈邮政支局】" },
-					//     { "time": "2016-03-25 10:03:27",
-					//       "context": "到达【外冈邮政支局】【外冈邮政支局】" },
-					//     { "time": "2016-03-24 07:08:43",
-					//       "context": "离开【上海郊区】，下一站【嘉定外冈】【上海郊区】" },
-					//     { "time": "2016-03-23 05:43:28",
-					//       "context": "离开【上海】，下一站【嘉定转运】【上海】" },
-					//     { "time": "2016-03-22 11:04:00",
-					//       "context": "到达【上海】【上海】" },
-					//     { "time": "2016-03-22 08:54:26",
-					//       "context": "离开【广州】，下一站【上海王港】【广州】" },
-					//     { "time": "2016-03-21 23:27:00",
-					//       "context": "到达【广州】【广州】" },
-					//     { "time": "2016-03-21 19:33:56",
-					//       "context": "离开【珠海】，下一站【广州中心】【珠海】" },
-					//     { "time": "2016-03-21 17:17:00",
-					//       "context": "离开【中国邮政集团公司珠海市金邦达邮局】【中国邮政集团公司珠海市金邦达邮局】" },
-					//     { "time": "2016-03-21 17:06:10",
-					//       "context": "【广东省中国邮政集团公司珠海市金邦达邮局】已经收寄【中国邮政集团公司珠海市金邦达邮局】" },
-					//     { "time": "2016-03-21 06:30:00",
-					//       "context": "到达【珠海】【珠海】" }
-					//   ];
 
 					// 取得 lastEventTime 之后的所有 context
 					deliveryInfo.forEach(function(info) {
@@ -129,6 +101,11 @@ function worker() {
 							eventObj[infoTime.format("YYYY-MM-DD HH:mm:ss")] = context;
 						}
 					});
+
+                    if (Object.keys(eventObj).length == 0) {
+                            console.log('发货单号可能有误! (' + orderid + ', ' + deliveryNo + ')');
+                            return;
+                    }
 					
 					_DAMIAA_API.pushEvents(deliveryStatus, orderid, userid, openid, eventObj
 						, function(err, result) {

@@ -11,6 +11,7 @@ var _ENDPOINTS_VALIDATE_ORDER		= _DAMIAA_API_ENDPOINTS.validate_order;
 var _ENDPOINTS_PAYMENT_COMPLEMENT	= _DAMIAA_API_ENDPOINTS.payment_complement;
 var _ENDPOINTS_GET_ORDERS			= _DAMIAA_API_ENDPOINTS.get_orders;
 var _ENDPOINTS_PUSH_EVENTS			= _DAMIAA_API_ENDPOINTS.push_events;
+var _ENDPOINTS_ME					= _DAMIAA_API_ENDPOINTS.me;
 
 
 function paymentComplement(userid, openid, orderid, paymentInfo, callback) {
@@ -109,6 +110,20 @@ function pushEvents(deliveryStatus, orderid, userid, openid, events, callback) {
 	});
 }
 
+function me(token, tokenType, callback) {
+	_HTTP_CLIENT(
+		_ENDPOINTS_ME
+		, null, 'get',  {type: tokenType, token: token}, function(error, result) {
+		if (error) return callback(error);
+
+		if (result.error) {
+			return callback(result);
+		}
+
+		return callback(null, result);
+	});
+}
+
 
 if (require.main == module) {
 
@@ -119,6 +134,7 @@ if (require.main == module) {
 		validateOrder: validateOrder,
 		paymentComplement: paymentComplement,
 		getOrderList: getOrderList,
-		pushEvents: pushEvents
+		pushEvents: pushEvents,
+		me: me
 	}
 }

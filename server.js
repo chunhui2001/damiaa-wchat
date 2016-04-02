@@ -338,7 +338,8 @@ app.get('/gen-paysign/:prepayid', function(req, res) {
 	var sendResult  			= {error: false, message: null, data: null};	
 
 	if (!auth) {
-		sendResult.data = 'permission deny!';
+		sendResult.error 	= true;
+		sendResult.data 	= 'permission deny!';
 		res.json(sendResult);
 	}
 
@@ -346,7 +347,8 @@ app.get('/gen-paysign/:prepayid', function(req, res) {
 	var token 		= auth.split(' ')[1];
 
 	if (!tokenType || !token) {
-		sendResult.data = 'invalidate token!';
+		sendResult.error 	= true;
+		sendResult.message 	= 'invalidate token!';
 		res.json(sendResult);
 	}
 
@@ -417,6 +419,76 @@ app.get('/gen-paysign/:prepayid', function(req, res) {
 			return res.json(sendResult);
 		});
 	});
+});
+
+app.get("/fanslist", function(req, res, next) {	
+	// 取得 token, type: bearer
+	// 根据 token 调用 api.damiaa.com 取得用户信息, 只有用户身份是管理员时才允许进一步操作
+
+	var sendResult  = {error: false, message: null, data: null};	
+	var auth 		= req.headers.authorization;
+
+	if (!auth) {
+		sendResult.error 	= true;
+		sendResult.message 	= 'authoriaztion error!';
+		res.json(sendResult);
+	}
+
+	var tokenType 	= auth.split(' ')[0];
+	var token 		= auth.split(' ')[1];
+
+
+
+	_DAMIAA_API.me(token, tokenType, function(err, result) {
+
+		if (err) {
+			sendResult.error 	= true;
+			sendResult.data 	= err;
+			sendResult.message 	= 'validate token failed!';
+			return res.json(sendResult);
+		} 
+
+		if (!(result && result.data && result.data.isAdmin)) {
+			sendResult.error 	= true;
+			sendResult.data 	= 'permission deny!';
+			return res.json(sendResult);
+		}
+
+		// 取得粉丝列表
+		wchatAPI.getUserList(null, function(error, result) {
+			if (error) {
+				sendResult.error 	= true;
+				sendResult.data 	= error;
+				sendResult.message 	= 'wchatAPI.getUserList error!';
+				return res.json(sendResult);
+			} 
+
+			var fansOpenidList 	= result && result.data ? result.data.openid : null;
+
+			if (!(fansOpenidList && fansOpenidList.length > 0)) {
+				sendResult.error 	= false;
+				sendResult.data 	= null;
+				sendResult.message 	= 'no fans in meantime';
+				return res.json(sendResult);
+			}
+
+			wchatAPI.getUserInfoList(fansOpenidList, '', function(err, result) {
+				result = _.sortBy(result, function(u) { return u.subscribe_time * -1});
+
+				var context 	= result.map(function(user) {
+					return _.extend(user, {subscribe_time: moment.unix(user.subscribe_time).format('YYYY/MM/DD HH:mm:ss')})
+				});
+
+				
+				sendResult.data 	= context;
+
+				return res.json(sendResult);
+			});
+			
+		});
+		
+	});
+
 });
 
 

@@ -531,6 +531,49 @@ function getUserInfo(openid, lang, callback) {
 	});
 }
 
+function getUserInfoList(openidArray, lang, callback) {
+	if (_.isEmpty(openidArray) || _.isNull(openidArray) || _.isNaN(openidArray) || _.isUndefined(openidArray)) 
+			return callback('openid 不可以为空！');
+	if (_.isEmpty(lang)|| _.isNull(lang)) lang 	= 'zh_CN';
+	if (_.isString(openidArray)) openidArray = [openidArray];
+
+	var len 	= openidArray.length;
+	var index 	= 0;
+	var userList 	= [];
+
+	openidArray.forEach(function(openid) {
+		_FETCH_TOKEN(function (err, result) {
+			if (err) {
+				// TODO
+				console.log('fetch token failed!');
+				return;
+			}
+
+			var currentToken 	= result;
+			
+			httpClient(ENDPOINTS_GET_USERINFO
+						  .replace('{{{ACCESS_TOKEN}}}', currentToken)
+						  .replace('{{{OPENID}}}', openid)
+						  .replace('{{{zh_CN}}}', lang)
+						, null, 'get', null, function(error, result) {
+
+				if (error) return callback(error);
+
+				if (result.errcode) {
+					return callback(result);
+				}
+
+				index = index + 1;
+
+				userList.push(result);
+
+				if (len == index) return callback(null, userList);
+			});
+		});
+	});
+	
+}
+
 function unifiedOrder(params, callback) {
 	// https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_4
 	// https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
@@ -753,10 +796,10 @@ if (require.main == module) {
 	// 	console.log(result);
 	// });
 
-	genSpecMenu(null, function(error, result) {
-		if (error) return console.log(error);
-		console.log(result);
-	});
+	// genSpecMenu(null, function(error, result) {
+	// 	if (error) return console.log(error);
+	// 	console.log(result);
+	// });
 
 	// createGroup('developer', function(error, result) {
 	// 	if (error) return console.log(error);
@@ -778,10 +821,10 @@ if (require.main == module) {
 	// 	console.log(result);
 	// });
 
-	// getUserList(null, function(error, result) {
-	// 	if (error) return console.log(error);
-	// 	console.log(result);
-	// });
+	getUserList(null, function(error, result) {
+		if (error) return console.log(error);
+		console.log(result);
+	});
 
 	// 'ofnVVw8L9-OAibNXOsofdhOQrSko',
  	// 'ofnVVw9aVxkxSfvvW373yuMYT7fs',
@@ -858,7 +901,9 @@ if (require.main == module) {
 		getUserAccessToken: getUserAccessToken,
 		unifiedOrder: unifiedOrder,
 		sendMessage: sendMessage,
-		orderMessageAlert: orderMessageAlert
+		orderMessageAlert: orderMessageAlert,
+		getUserList: getUserList,
+		getUserInfoList: getUserInfoList
 	}
 }
 

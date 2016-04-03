@@ -168,12 +168,12 @@ function genMenu(meun, callback) {
 				{	
 					"type":"view",
 					"name":"AA精米",
-					"url":"http://www.damiaa.com/"
+					"url":"http://wap.damiaa.com/"
 				}, 
 				// {
 				// 	"type":"view",
 				// 	"name":"历史订单",
-				// 	"url":"http://www.damiaa.com/account-orders"
+				// 	"url":"http://wap.damiaa.com/account-orders"
 				// }, 
 				{
 					"name":"菜单",
@@ -188,7 +188,7 @@ function genMenu(meun, callback) {
 						}, {
 							"type":"view",
 							"name":"用户登陆",
-							"url":"http://www.damiaa.com/login/"
+							"url":"http://wap.damiaa.com/login/"
 						}
 		                // , {
 		                //     "type": "scancode_push", 
@@ -256,12 +256,12 @@ function genSpecMenu(specMenu, callback) {
 				{	
 					"type":"view",
 					"name":"AA精米",
-					"url":"http://www.damiaa.com/"
+					"url":"http://wap.damiaa.com/"
 				} , 
 				// {
 				// 	"type":"view",
 				// 	"name":"历史订单",
-				// 	"url":"http://www.damiaa.com/account-orders"
+				// 	"url":"http://wap.damiaa.com/account-orders"
 				// } , 
 				{
 					"name":"菜单",
@@ -276,7 +276,7 @@ function genSpecMenu(specMenu, callback) {
 						}, {
 							"type":"view",
 							"name":"用户登陆",
-							"url":"http://www.damiaa.com/#/login/"
+							"url":"http://wap.damiaa.com/#/login/"
 						}, {
 						   "type":"click",
 						   "name":"BOSS专属",
@@ -796,10 +796,10 @@ if (require.main == module) {
 	// 	console.log(result);
 	// });
 
-	// genSpecMenu(null, function(error, result) {
-	// 	if (error) return console.log(error);
-	// 	console.log(result);
-	// });
+	genSpecMenu(null, function(error, result) {
+		if (error) return console.log(error);
+		console.log(result);
+	});
 
 	// createGroup('developer', function(error, result) {
 	// 	if (error) return console.log(error);
@@ -821,10 +821,10 @@ if (require.main == module) {
 	// 	console.log(result);
 	// });
 
-	getUserList(null, function(error, result) {
-		if (error) return console.log(error);
-		console.log(result);
-	});
+	// getUserList(null, function(error, result) {
+	// 	if (error) return console.log(error);
+	// 	console.log(result);
+	// });
 
 	// 'ofnVVw8L9-OAibNXOsofdhOQrSko',
  	// 'ofnVVw9aVxkxSfvvW373yuMYT7fs',

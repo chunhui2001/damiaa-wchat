@@ -6,6 +6,7 @@ var redis 		= require('redis');
 var moment 		= require('moment');
 var uuid 		= require('uuid');
 var xml2json 	= require('xml2json');
+var nimble 		= require('nimble');
 
 var globalConfig 	= require('./config/global');
 var wchatEvent 		= require('./common/wchat-event');
@@ -459,7 +460,7 @@ app.get("/fanslist", function(req, res, next) {
 			if (error) {
 				sendResult.error 	= true;
 				sendResult.data 	= error;
-				sendResult.message 	= 'wchatAPI.getUserList error!';
+				sendResult.message 	= 'wchatAPI.getUserList error!' + token;
 				return res.json(sendResult);
 			} 
 
@@ -471,19 +472,53 @@ app.get("/fanslist", function(req, res, next) {
 				sendResult.message 	= 'no fans in meantime';
 				return res.json(sendResult);
 			}
+			
+			var userInfoList 	= null;
+			var partnerList 	= null;
+			var isError 		= false;
 
-			wchatAPI.getUserInfoList(fansOpenidList, '', function(err, result) {
-				result = _.sortBy(result, function(u) { return u.subscribe_time * -1});
+			nimble.parallel([
+				function(callback) {
+					wchatAPI.getUserInfoList(fansOpenidList, '', function(err, result) {
+						if (err) isError = true;
 
-				var context 	= result.map(function(user) {
-					return _.extend(user, {subscribe_time: moment.unix(user.subscribe_time).format('YYYY/MM/DD HH:mm:ss')})
+						result = _.sortBy(result, function(u) { return u.subscribe_time * -1});
+
+						var context 	= result.map(function(user) {
+							return _.extend(user, {subscribe_time: moment.unix(user.subscribe_time).format('YYYY/MM/DD HH:mm')})
+						});
+						
+						userInfoList 	= context;
+
+						callback();
+					});
+				}, function(callback) {
+					_DAMIAA_API.partnerList(token, tokenType, function(err, result) {
+						if (err) isError = true;
+						partnerList = result ? result.data : [];
+
+						callback();
+					});
+				} ]
+			, function() {
+				if (isError) {
+					sendResult.error = true;
+					return res.json(sendResult);
+				}
+
+				partnerList.forEach(function(partner) {
+					userInfoList.forEach(function(user) {
+						if (partner.unionid == user.unionid) {
+							user.partnerType 	= partner.type;
+						}
+					});
 				});
 
-				
-				sendResult.data 	= context;
+				sendResult.data 	= userInfoList;
 
 				return res.json(sendResult);
 			});
+
 			
 		});
 		

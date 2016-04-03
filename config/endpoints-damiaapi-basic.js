@@ -8,4 +8,5 @@ module.exports = {
 	get_orders: 'http://' + globalConfig.DAMIAA_API_HOSTNAME + '/orderlist/SENDED/',
 	push_events: 'http://' + globalConfig.DAMIAA_API_HOSTNAME + '/push-events/{{{deliveryStatus}}}',
 	me: 'http://' + globalConfig.DAMIAA_API_HOSTNAME + '/me',
+	partners: 'http://' + globalConfig.DAMIAA_API_HOSTNAME + '/partners/',
 }

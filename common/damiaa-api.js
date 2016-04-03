@@ -12,6 +12,7 @@ var _ENDPOINTS_PAYMENT_COMPLEMENT	= _DAMIAA_API_ENDPOINTS.payment_complement;
 var _ENDPOINTS_GET_ORDERS			= _DAMIAA_API_ENDPOINTS.get_orders;
 var _ENDPOINTS_PUSH_EVENTS			= _DAMIAA_API_ENDPOINTS.push_events;
 var _ENDPOINTS_ME					= _DAMIAA_API_ENDPOINTS.me;
+var _ENDPOINTS_PARTNERS				= _DAMIAA_API_ENDPOINTS.partners;
 
 
 function paymentComplement(userid, openid, orderid, paymentInfo, callback) {
@@ -124,6 +125,20 @@ function me(token, tokenType, callback) {
 	});
 }
 
+function partnerList(token, tokenType, callback) {
+	_HTTP_CLIENT(
+		_ENDPOINTS_PARTNERS
+		, null, 'get',  {type: tokenType, token: token}, function(error, result) {
+		if (error) return callback(error);
+
+		if (result.error) {
+			return callback(result);
+		}
+
+		return callback(null, result);
+	});
+}
+
 
 if (require.main == module) {
 
@@ -135,6 +150,7 @@ if (require.main == module) {
 		paymentComplement: paymentComplement,
 		getOrderList: getOrderList,
 		pushEvents: pushEvents,
-		me: me
+		me: me,
+		partnerList:partnerList
 	}
 }

@@ -510,6 +510,7 @@ app.get("/fanslist", function(req, res, next) {
 					userInfoList.forEach(function(user) {
 						if (partner.unionid == user.unionid) {
 							user.partnerType 	= partner.type;
+							user.partnerId 		= partner.id;
 						}
 					});
 				});

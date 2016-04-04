@@ -541,21 +541,23 @@ function getUserInfoList(openidArray, lang, callback) {
 	var index 	= 0;
 	var userList 	= [];
 
-	openidArray.forEach(function(openid) {
-		_FETCH_TOKEN(function (err, result) {
-			if (err) {
-				// TODO
-				console.log('fetch token failed!');
-				return;
-			}
+	
+	
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
+		}
 
-			var currentToken 	= result;
-			
+		var currentToken 	= result;
+
+		openidArray.forEach(function(openid) {
 			httpClient(ENDPOINTS_GET_USERINFO
-						  .replace('{{{ACCESS_TOKEN}}}', currentToken)
-						  .replace('{{{OPENID}}}', openid)
-						  .replace('{{{zh_CN}}}', lang)
-						, null, 'get', null, function(error, result) {
+					  .replace('{{{ACCESS_TOKEN}}}', currentToken)
+					  .replace('{{{OPENID}}}', openid)
+					  .replace('{{{zh_CN}}}', lang)
+					, null, 'get', null, function(error, result) {
 
 				if (error) return callback(error);
 
@@ -570,8 +572,8 @@ function getUserInfoList(openidArray, lang, callback) {
 				if (len == index) return callback(null, userList);
 			});
 		});
+		
 	});
-	
 }
 
 function unifiedOrder(params, callback) {

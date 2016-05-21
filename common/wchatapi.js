@@ -489,10 +489,12 @@ function getUserList(nextOpenId, callback) {
 		}
 
 		httpClient(endpoints, null, 'get', null, function(error, result) {
-			if (error) return callback(error);
+			if (error) {
+				return callback(error);
+			}
 
-			// {"errcode":40013,"errmsg":"invalid appid"}
 			if (result.errcode) {
+				result.token 	= currentToken;
 				return callback(result);
 			}
 

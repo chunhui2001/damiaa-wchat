@@ -460,7 +460,7 @@ app.get("/fanslist", function(req, res, next) {
 			if (error) {
 				sendResult.error 	= true;
 				sendResult.data 	= error;
-				sendResult.message 	= 'wchatAPI.getUserList error!' + token;
+				sendResult.message 	= 'wchatAPI.getUserList error!';
 				return res.json(sendResult);
 			} 
 

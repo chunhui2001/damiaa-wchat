@@ -738,6 +738,7 @@ function getJSAPITicket(callback) {
 	});
 }
 
+// 生成永久二维码 (无过期时间)
 function genQRCodeNonExpired(scene_id, callback) {	
 
 	_FETCH_TOKEN(function (err, result) {
@@ -748,7 +749,7 @@ function genQRCodeNonExpired(scene_id, callback) {
 		}
 
 		var currentToken 	= result;
-		console.log(currentToken);
+
 		httpClient(ENDPOINTS_GEN_QRCODE_NONEXPIRED
 					.replace('{{{ACCESS_TOKEN}}}', currentToken)
 					, {

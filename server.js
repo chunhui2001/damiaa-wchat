@@ -480,6 +480,7 @@ app.get("/fanslist", function(req, res, next) {
 			nimble.parallel([
 				function(callback) {
 					wchatAPI.getUserInfoList(fansOpenidList, '', function(err, result) {
+						
 						if (err) isError = true;
 
 						result = _.sortBy(result, function(u) { return u.subscribe_time * -1});
@@ -501,6 +502,7 @@ app.get("/fanslist", function(req, res, next) {
 					});
 				} ]
 			, function() {
+
 				if (isError) {
 					sendResult.error = true;
 					return res.json(sendResult);
@@ -511,6 +513,8 @@ app.get("/fanslist", function(req, res, next) {
 						if (partner.unionid == user.unionid) {
 							user.partnerType 	= partner.type;
 							user.partnerId 		= partner.id;
+							user.qrcode 		= partner.qrcode;
+							user.gen 			= partner.gen;
 						}
 					});
 				});

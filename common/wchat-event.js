@@ -225,6 +225,10 @@ function onClick (message, callback) {
 		content 	= 'Hi, BOSS.';
 	}
 
+	if (eventKey == 'K_MY_QRCODE') {
+		content 	= '显示我的二维码.';
+	}
+
 	if (content == null) {
 		content = '(null) ' + eventKey;
 	}
@@ -260,6 +264,27 @@ function onPicWeixin (message, callback) {
 
 	return callback(null, sendMessage);
 
+}
+
+function onShowMyQrcode(message, callback) {
+	var fromOpenId 		= message.fromusername[0];
+	var toMasterName 	= message.tousername[0];
+	var eventKey 		= message.eventkey[0];
+
+	var content 		= null;
+
+	if (eventKey == 'K_MY_QRCODE') {
+		content 	= '显示我的二维码.';
+	}
+
+	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
+							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+							+ toMasterName + ']]></FromUserName><CreateTime>' 
+							+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
+							+ content
+							+ ']]></Content></xml>';
+
+	return callback(null, sendMessage);
 }
 
 

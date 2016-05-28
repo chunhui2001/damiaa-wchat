@@ -43,13 +43,14 @@ var globalConfig 	= {
 
 	merchant_id: '1315577401',
 	
-	current_access_token: 'NvU5CZPZisUrYU5fMuCHTv_OQzHS4QoIXuP1nDfQYPKLV6gmR-CqBrtlEpyc8fqOetIsMOI08_s5xGyG-GA_swtUSh7HpA0TeWzoZ2h6P8fv2sGvBtcIJXeFdYRay2nmBUTjAAALED',
+	current_access_token: 'XJ3vUuPIV-DmzhB1kRppCJJyGDLOlkiUXyANkr17vpCf2Z98fw1N2Eye6YJfm2ViMirmibwIotduwYvJh5wHGc7dZchmSna55loo18mdmm1-iJrwuULVAwRPc6DjJh-dPJDiAGAHBV',
 
 	menuKeys: {
 		KEY_SetupOrder_AUTO: 'K_setup_order_auto', 					// 上传头像
 		KEY_UploadHeadPhoto: 'K_upload_head_photo', 					// 上传头像
 		KEY_GOOD: 'K_V1001_GOOD', 										// 赞一下我们
-		KEY_BOSS: 'K_BOSS'
+		KEY_BOSS: 'K_BOSS',
+		MY_QRCODE: 'K_MY_QRCODE'
 	},
 	R_KEY_ACCESS_TOKEN: 'WX_ACCESS_TOKEN_EceZfK'
 }

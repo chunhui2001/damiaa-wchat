@@ -270,6 +270,10 @@ function genSpecMenu(specMenu, callback) {
 		                    "name": "一键扫码下单", 
 		                    "key": MENU_KEYS.KEY_SetupOrder_AUTO
 		                }, {
+		                    "type": "click", 
+		                    "name": "我的二维码", 
+		                    "key": MENU_KEYS.MY_QRCODE
+		                }, {
 						   "type": "pic_weixin", 
 							"name": "上传头像", 
 							"key": MENU_KEYS.KEY_UploadHeadPhoto, 

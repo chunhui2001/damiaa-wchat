@@ -226,7 +226,36 @@ function onClick (message, callback) {
 	}
 
 	if (eventKey == 'K_MY_QRCODE') {
-		content 	= '显示我的二维码.';
+		content 	= '我的二维码';
+		var picurl 		= 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQHk7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2xqZ2pCV0hseGRLOHRvb0dmUlM2AAIE7UfyVgMEAAAAAA==';
+
+
+		// var sendMessage 	='<xml><ToUserName><![CDATA[' 
+		// 					+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+		// 					+ toMasterName + ']]></FromUserName><CreateTime>' 
+		// 					+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>1</ArticleCount><Articles>'
+		// 					+ '<item><Title><![CDATA[' 
+		// 					+ content + ']]></Title><PicUrl><![CDATA[' 
+		// 					+ picurl + ']]></PicUrl><Url><![CDATA[' 
+		// 					+ picurl + ']]></Url></item></Articles></xml>';
+
+		// return callback(null, sendMessage);
+
+		var sendMessage 	='<xml><ToUserName><![CDATA[' 
+							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+							+ toMasterName + ']]></FromUserName><CreateTime>' 
+							+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
+							+ '<item><Title><![CDATA[' 
+							+ content + ']]></Title><PicUrl><![CDATA[' 
+							+ picurl + ']]></PicUrl><Url><![CDATA[' 
+							+ picurl
+							+ ']]></Url></item>'
+							+ '<item><Title><![CDATA[' 
+							+ '点击查看原图' + ']]></Title><PicUrl><![CDATA[' 
+							+ picurl + ']]></PicUrl><Url><![CDATA[' 
+							+ picurl + ']]></Url></item></Articles></xml>';
+
+		return callback(null, sendMessage);
 	}
 
 	if (content == null) {

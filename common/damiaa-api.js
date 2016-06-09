@@ -13,6 +13,7 @@ var _ENDPOINTS_GET_ORDERS			= _DAMIAA_API_ENDPOINTS.get_orders;
 var _ENDPOINTS_PUSH_EVENTS			= _DAMIAA_API_ENDPOINTS.push_events;
 var _ENDPOINTS_ME					= _DAMIAA_API_ENDPOINTS.me;
 var _ENDPOINTS_PARTNERS				= _DAMIAA_API_ENDPOINTS.partners;
+var _ENDPOINTS_GET_QRCODE			= _DAMIAA_API_ENDPOINTS.get_qrcode;
 
 
 function paymentComplement(userid, openid, orderid, paymentInfo, callback) {
@@ -139,9 +140,25 @@ function partnerList(token, tokenType, callback) {
 	});
 }
 
+function getQrcode(openid, callback) {
+	_HTTP_CLIENT(
+		_ENDPOINTS_GET_QRCODE.replace('{{{openid}}}', openid)
+		, null, 'get',  null, function(error, result) {
+		if (error) return callback(error);
+
+		if (result.error) {
+			return callback(result);
+		}
+
+		return callback(null, result.data);
+	});
+}
+
 
 if (require.main == module) {
-
+	getQrcode('ofnVVw9aVxkxSfvvW373yuMYT7fs', function(err, result) {
+		console.log(err || result);
+	});
 } else {
 	module.exports = {
 		uploadImage: uploadImage,
@@ -151,6 +168,7 @@ if (require.main == module) {
 		getOrderList: getOrderList,
 		pushEvents: pushEvents,
 		me: me,
-		partnerList:partnerList
+		partnerList: partnerList,
+		getQrcode: getQrcode
 	}
 }

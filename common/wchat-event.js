@@ -226,50 +226,50 @@ function onClick (message, callback) {
 	}
 
 	if (eventKey == 'K_MY_QRCODE') {
-		content 	= '我的二维码';
-		var picurl 		= 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQHk7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2xqZ2pCV0hseGRLOHRvb0dmUlM2AAIE7UfyVgMEAAAAAA==';
+		console.log(fromOpenId, 'fromOpenId');
+		console.log(toMasterName, 'toMasterName');
 
+		content 	= '我的二维码.';
 
-		// var sendMessage 	='<xml><ToUserName><![CDATA[' 
-		// 					+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
-		// 					+ toMasterName + ']]></FromUserName><CreateTime>' 
-		// 					+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>1</ArticleCount><Articles>'
-		// 					+ '<item><Title><![CDATA[' 
-		// 					+ content + ']]></Title><PicUrl><![CDATA[' 
-		// 					+ picurl + ']]></PicUrl><Url><![CDATA[' 
-		// 					+ picurl + ']]></Url></item></Articles></xml>';
+		// 根据用户的 openid 取得用户二维码
+		_DAMIAA_API.getQrcode(fromOpenId, function(err, result) {
+			var picurl 		= err ? '' : result.gen;
 
-		// return callback(null, sendMessage);
+			if (err) content 	= '未能取得您的二维码!'
 
-		var sendMessage 	='<xml><ToUserName><![CDATA[' 
-							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
-							+ toMasterName + ']]></FromUserName><CreateTime>' 
-							+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
-							+ '<item><Title><![CDATA[' 
-							+ content + ']]></Title><PicUrl><![CDATA[' 
-							+ picurl + ']]></PicUrl><Url><![CDATA[' 
-							+ picurl
-							+ ']]></Url></item>'
-							+ '<item><Title><![CDATA[' 
-							+ '点击查看原图' + ']]></Title><PicUrl><![CDATA[' 
-							+ picurl + ']]></PicUrl><Url><![CDATA[' 
-							+ picurl + ']]></Url></item></Articles></xml>';
+			var sendMessage 	='<xml><ToUserName><![CDATA[' 
+								+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+								+ toMasterName + ']]></FromUserName><CreateTime>' 
+								+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
+								+ '<item><Title><![CDATA[' 
+								+ content + ']]></Title><PicUrl><![CDATA[' 
+								+ picurl + ']]></PicUrl><Url><![CDATA[' 
+								+ picurl
+								+ ']]></Url></item>'
+								+ '<item><Title><![CDATA[' 
+								+ '点击查看原图' + ']]></Title><PicUrl><![CDATA[' 
+								+ picurl + ']]></PicUrl><Url><![CDATA[' 
+								+ picurl + ']]></Url></item></Articles></xml>';
+
+			return callback(null, sendMessage);
+		});
+		
+	} else {
+
+		if (content == null) {
+			content = '(null) ' + eventKey;
+		}
+
+		var sendMessage 	= '<xml><ToUserName><![CDATA[' 
+								+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+								+ toMasterName + ']]></FromUserName><CreateTime>' 
+								+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
+								+ content
+								+ ']]></Content></xml>';
 
 		return callback(null, sendMessage);
 	}
-
-	if (content == null) {
-		content = '(null) ' + eventKey;
-	}
-
-	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
-							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
-							+ toMasterName + ']]></FromUserName><CreateTime>' 
-							+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
-							+ content
-							+ ']]></Content></xml>';
-
-	return callback(null, sendMessage);
+	
 }
 
 function onPicWeixin (message, callback) {
@@ -353,7 +353,7 @@ function onImage (message, callback) {
 		var sendMessage 	='<xml><ToUserName><![CDATA[' 
 							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
 							+ toMasterName + ']]></FromUserName><CreateTime>' 
-							+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>1</ArticleCount><Articles>'
+							+ moment().unix() + '</CreateTime><MsgType><![CDATA[¬s]]></MsgType><ArticleCount>1</ArticleCount><Articles>'
 							+ '<item><Title><![CDATA[' 
 							+ info + ']]></Title><PicUrl><![CDATA[' 
 							+ picurl + ']]></PicUrl><Url><![CDATA[' 

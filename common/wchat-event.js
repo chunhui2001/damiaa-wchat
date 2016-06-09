@@ -53,11 +53,16 @@ function onSubscribe(message, callback) {
 	
 }
 
+// 一键扫码下单
 function onScancodeWaitmsg(message, callback) {
 
 	console.log(message, 'onScancodeWaitmsg');
 	console.log(message.scancodeinfo[0]['scanresult'], 'scanresult');
 	console.log(message.scancodeinfo[0]['scantype'], 'scantype');
+
+	// 可以通过 qrcodeUri 找到 qrcode entity
+	// http://weixin.qq.com/r/qDipsY-EKdJWrcvS9226
+	var qrcodeUri 	= message.scancodeinfo[0]['scanresult'];
 	
 
 	var fromOpenId 		= message.fromusername[0];
@@ -133,6 +138,10 @@ function onScancodePush(message, callback) {
 	return callback(null, sendMessage);
 }
 
+// 打开 “微信扫一扫” 时可触发该消息推送
+// 长按维码时也可以触发该消息推送
+// 扫 "公众号二维码" 时不会有消息推送
+// 扫 "下发二维码" 时可触发该消息推送
 function onScan(message, callback) {
 	console.log(message, 'onScan');
 
@@ -145,6 +154,12 @@ function onScan(message, callback) {
 	// 	eventkey: [ '1' ],
 	// 	ticket: [ 'gQHk7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2xqZ2pCV0hseGRLOHRvb0dmUlM2AAIE7UfyVgMEAAAAAA==' ] 
 	// }
+
+	console.log(message, 'onScan');
+	// 根据 fromusername 找用户, 根据用户下单
+	
+	// 根据 ticket 到 QRCODES 表中找 openid
+	// 根据 openid 找 partner id
 
 	// 可在此处实现扫码下单逻辑
 

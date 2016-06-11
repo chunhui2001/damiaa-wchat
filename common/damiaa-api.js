@@ -10,6 +10,7 @@ var _ENDPOINTS_GET_OPENID 		= _DAMIAA_API_ENDPOINTS.get_openid;
 var _ENDPOINTS_VALIDATE_ORDER		= _DAMIAA_API_ENDPOINTS.validate_order;
 var _ENDPOINTS_PAYMENT_COMPLEMENT	= _DAMIAA_API_ENDPOINTS.payment_complement;
 var _ENDPOINTS_GET_ORDERS			= _DAMIAA_API_ENDPOINTS.get_orders;
+var _ENDPOINTS_CREATE_ORDER			= _DAMIAA_API_ENDPOINTS.create_order;
 var _ENDPOINTS_PUSH_EVENTS			= _DAMIAA_API_ENDPOINTS.push_events;
 var _ENDPOINTS_ME					= _DAMIAA_API_ENDPOINTS.me;
 var _ENDPOINTS_PARTNERS				= _DAMIAA_API_ENDPOINTS.partners;
@@ -154,6 +155,30 @@ function getQrcode(openid, callback) {
 	});
 }
 
+function createOrder(params, callback) {
+	var orderData 	= {
+	    "paymethod": 1,
+	    "941174731905": 3,
+	    "auto_create": true, 
+	    "openid": "ofnVVw9aVxkxSfvvW373yuMYT7fs", 
+	    "ticket": ""
+	}
+
+	orderData = _.extend(orderData, params);
+	
+	_HTTP_CLIENT(
+		_ENDPOINTS_CREATE_ORDER
+		, orderData, 'post', null, function(error, result) {
+		if (error) return callback(error);
+
+		if (result.error) {
+			return callback(result);
+		}
+		
+		return callback(null, result.data);
+	});
+}
+
 
 if (require.main == module) {
 	getQrcode('ofnVVw9aVxkxSfvvW373yuMYT7fs', function(err, result) {
@@ -169,6 +194,7 @@ if (require.main == module) {
 		pushEvents: pushEvents,
 		me: me,
 		partnerList: partnerList,
-		getQrcode: getQrcode
+		getQrcode: getQrcode,
+		createOrder: createOrder
 	}
 }

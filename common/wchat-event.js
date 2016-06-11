@@ -143,7 +143,6 @@ function onScancodePush(message, callback) {
 // 扫 "公众号二维码" 时不会有消息推送
 // 扫 "下发二维码" 时可触发该消息推送
 function onScan(message, callback) {
-	console.log(message, 'onScan');
 
 	// { 
 	// 	tousername: [ 'gh_7a09008c1fd9' ],
@@ -155,13 +154,9 @@ function onScan(message, callback) {
 	// 	ticket: [ 'gQHk7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2xqZ2pCV0hseGRLOHRvb0dmUlM2AAIE7UfyVgMEAAAAAA==' ] 
 	// }
 
-	console.log(message, 'onScan');
 	// 根据 fromusername 找用户, 根据用户下单
-	
 	// 根据 ticket 到 QRCODES 表中找 openid
 	// 根据 openid 找 partner id
-
-	// 可在此处实现扫码下单逻辑
 
 	var fromOpenId 		= message.fromusername[0];
 	var toMasterName 	= message.tousername[0];
@@ -169,40 +164,58 @@ function onScan(message, callback) {
 	var content 		= null;
 	var isReg 			= false;
 
-	if (!isReg) {
-		content 	= '您还没有注册， 请先去注册！';
+	var goodsId 		= '941174731905';
 
-		var sendMessage 	='<xml><ToUserName><![CDATA[' 
-		+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
-		+ toMasterName + ']]></FromUserName><CreateTime>' 
-		+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
-		+ '<item><Title><![CDATA[' 
-		+ content + ']]></Title><PicUrl><![CDATA[' 
-		+ 'http://www.damiaa.com/img/miscellaneous/icon-reg.jpg' + ']]></PicUrl><Url><![CDATA[' 
-		+ 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbfbeee15bbe621e6&redirect_uri=http%3A%2F%2Fwww.damiaa.com%2Fregister&response_type=code&scope=snsapi_base&state=HbYFbj4CAlo72uPw#wechat_redirect' 
-		+ ']]></Url></item>'
-		+ '<item><Title><![CDATA[' 
-		+ '现在就去注册吧.' + ']]></Title><PicUrl><![CDATA[' 
-		+ 'http://www.damiaa.com/img/miscellaneous/icon-reg2.png' + ']]></PicUrl><Url><![CDATA[' 
-		+ 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbfbeee15bbe621e6&redirect_uri=http%3A%2F%2Fwww.damiaa.com%2Fregister&response_type=code&scope=snsapi_base&state=HbYFbj4CAlo72uPw#wechat_redirect' 
-		+ ']]></Url></item></Articles></xml>';
+	var orderData 	= {
+	    "paymethod": 1,
+	    "auto_create": true, 
+	    "openid": message.fromusername ? message.fromusername[0]: null, 
+	    "ticket": message.ticket ? message.ticket[0] : null
+	};
+
+	orderData[goodsId] 	= 1;
+
+	_DAMIAA_API.createOrder(orderData, function(err, result) {
+		if (err) {
+			if (err.status == 'NOT_ACCEPTABLE') {
+				content 	= '您还没有注册， 请先去注册！';
+
+				var sendMessage 	='<xml><ToUserName><![CDATA[' 
+				+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+				+ toMasterName + ']]></FromUserName><CreateTime>' 
+				+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
+				+ '<item><Title><![CDATA[' 
+				+ content + ']]></Title><PicUrl><![CDATA[' 
+				+ 'http://www.damiaa.com/img/miscellaneous/icon-reg.jpg' + ']]></PicUrl><Url><![CDATA[' 
+				+ 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbfbeee15bbe621e6&redirect_uri=http%3A%2F%2Fwww.damiaa.com%2Fregister&response_type=code&scope=snsapi_base&state=HbYFbj4CAlo72uPw#wechat_redirect' 
+				+ ']]></Url></item>'
+				+ '<item><Title><![CDATA[' 
+				+ '现在就去注册吧...' + ']]></Title><PicUrl><![CDATA[' 
+				+ 'http://www.damiaa.com/img/miscellaneous/icon-reg2.png' + ']]></PicUrl><Url><![CDATA[' 
+				+ 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbfbeee15bbe621e6&redirect_uri=http%3A%2F%2Fwww.damiaa.com%2Fregister&response_type=code&scope=snsapi_base&state=HbYFbj4CAlo72uPw#wechat_redirect' 
+				+ ']]></Url></item></Articles></xml>';
+
+				return callback(null, sendMessage);
+			} else {
+				// 下单失败稍后再试
+			}
+
+			return;
+		}
+		
+		// TODO
+		content 	= '下单成功: ' + result.id;
+		
+		var sendMessage 	= '<xml><ToUserName><![CDATA[' 
+							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+							+ toMasterName + ']]></FromUserName><CreateTime>' 
+							+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
+							+ content
+							+ ']]></Content></xml>';
 
 		return callback(null, sendMessage);
-	} else {
-		// 1. 根据用户扫面的二维码地址取得该用户关联的商户
-		var qrcodeTicket 	= message.ticket[0];
-
-		content 	= '下单成功.';
-	}	
-
-	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
-						+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
-						+ toMasterName + ']]></FromUserName><CreateTime>' 
-						+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
-						+ content
-						+ ']]></Content></xml>';
-
-	return callback(null, sendMessage);
+	});
+	
 }
 
 function onUnSubscribe(message, callback) {

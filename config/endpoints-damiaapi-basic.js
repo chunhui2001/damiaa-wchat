@@ -6,6 +6,7 @@ module.exports = {
 	validate_order: 'http://' + globalConfig.DAMIAA_API_HOSTNAME + '/order/{{{openid}}}/{{{prepayid}}}/',
 	payment_complement: 'http://' + globalConfig.DAMIAA_API_HOSTNAME + '/payment-completed/',
 	get_orders: 'http://' + globalConfig.DAMIAA_API_HOSTNAME + '/orderlist/SENDED/',
+	create_order: 'http://' + globalConfig.DAMIAA_API_HOSTNAME + '/create-order-auto/',
 	push_events: 'http://' + globalConfig.DAMIAA_API_HOSTNAME + '/push-events/{{{deliveryStatus}}}',
 	me: 'http://' + globalConfig.DAMIAA_API_HOSTNAME + '/me',
 	partners: 'http://' + globalConfig.DAMIAA_API_HOSTNAME + '/partners/',

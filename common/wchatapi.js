@@ -777,6 +777,39 @@ function genQRCodeNonExpired(scene_id, callback) {
 	});
 }
 
+// function uploadMedia(media_path, callback) {
+// 	_FETCH_TOKEN(function (err, result) {
+// 		if (err) {
+// 			// TODO
+// 			console.log('fetch token failed!');
+// 			return;
+// 		}
+
+// 		var currentToken 	= result;
+
+// 		// httpClient(ENDPOINTS_GEN_QRCODE_NONEXPIRED
+// 		// 			.replace('{{{ACCESS_TOKEN}}}', currentToken)
+// 		// 			, {
+// 		// 				"action_name": "QR_LIMIT_SCENE", 
+// 		// 				"action_info": {
+// 		// 					"scene": {
+// 		// 						"scene_id": scene_id
+// 		// 					}
+// 		// 				}
+// 		// 			}
+// 		// 			, 'post', null, function(error, result) {
+
+// 		// 	if (error) return callback(error);
+
+// 		// 	if (result.errcode) {
+// 		// 		return callback(result);
+// 		// 	}
+
+// 		// 	return callback(null, result);
+// 		// });
+// 	});
+// }
+
 
 if (require.main == module) {
 	

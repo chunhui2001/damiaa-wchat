@@ -8,8 +8,6 @@ function onView (message, callback) {
 }
 
 function onSubscribe(message, callback) {	
-	console.log(message, 'onSubscribe');
-
 	// { 
 	// 	tousername: [ 'gh_7a09008c1fd9' ],
 	// 	fromusername: [ 'ofnVVw9aVxkxSfvvW373yuMYT7fs' ],
@@ -204,7 +202,8 @@ function onScan(message, callback) {
 		}
 		
 		// TODO
-		content 	= '下单成功: ' + result.id;
+		content 	= '下单成功: \r\n' + result.id + '\r\n<a href="http://www.163.com/" style="color:gray;">文本内容</a>'
+						+ "\r\n<b>666</b>";
 		
 		var sendMessage 	= '<xml><ToUserName><![CDATA[' 
 							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
@@ -212,6 +211,20 @@ function onScan(message, callback) {
 							+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
 							+ content
 							+ ']]></Content></xml>';
+		// var picurl 			= 'http://www.damiaa.com/img/miscellaneous/icon-reg2.png';
+		// var sendMessage 	='<xml><ToUserName><![CDATA[' 
+		// 						+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+		// 						+ toMasterName + ']]></FromUserName><CreateTime>' 
+		// 						+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
+		// 						+ '<item><Title><![CDATA[' 
+		// 						+ content + ']]></Title><PicUrl><![CDATA[' 
+		// 						+ picurl + ']]></PicUrl><Url><![CDATA[' 
+		// 						+ picurl
+		// 						+ ']]></Url></item>'
+		// 						+ '<item><Title><![CDATA[' 
+		// 						+ '详情' + ']]></Title><Url><![CDATA[' 
+		// 						+ picurl + ']]></Url></item></Articles></xml>';
+
 
 		return callback(null, sendMessage);
 	});
@@ -278,6 +291,13 @@ function onClick (message, callback) {
 								+ '点击查看原图' + ']]></Title><PicUrl><![CDATA[' 
 								+ picurl + ']]></PicUrl><Url><![CDATA[' 
 								+ picurl + ']]></Url></item></Articles></xml>';
+
+			// TODO
+			// var sendMessage 	='<xml><ToUserName><![CDATA[' 
+			// 					+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+			// 					+ toMasterName + ']]></FromUserName><CreateTime>' 
+			// 					+ moment().unix() + '</CreateTime><MsgType><![CDATA[image]]></MsgType><Image><MediaId><![CDATA[' 
+			// 					+ 'LtqIc6AyH_5v4_hP93hki2_BfW9M61tatl-i-4tjEyQ' + ']]></MediaId></Image></xml>';
 
 			return callback(null, sendMessage);
 		});

@@ -247,8 +247,8 @@ function onScan(message, callback) {
 
 		postData.first.value 			= 'AA精米';
 		postData.orderno.value 			= result.id;
-		postData.refundproduct.value 	= '0.00（原价: 128.00）';
-		postData.refundno.value 		= '1袋/5千克';
+		postData.refundproduct.value 	= '¥ ' + result.itemMoney.toFixed(2); //'0.00（原价: 128.00）';
+		postData.refundno.value 		= '1袋';
 		postData.remark.value 			= '\r\n点击详情完善订单信息';
 
 		// 通知用户下单成功

@@ -253,7 +253,7 @@ function onScan(message, callback) {
 
 		// 通知用户下单成功
 		wchatAPI.sendTemplateMessage(template_id
-				, 'http://wap.damiaa.com/', '#FF0000', fromOpenId
+				, 'http://wap.damiaa.com/#/payment/' + result.id, '#FF0000', fromOpenId
 				, postData, function(err, result) {
 
 		});

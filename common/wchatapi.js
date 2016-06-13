@@ -8,6 +8,7 @@ var endpoints 		= require('../config/endpoints');
 var globalConfig 	= require('../config/global');
 
 var _FETCH_TOKEN 	= require('./support').fetchAccessToken;
+var _TMPL_MESSAGE 	= require('./message-template');
 
 var accessToken		= globalConfig.current_access_token;
 var MENU_KEYS		= globalConfig.menuKeys;
@@ -34,6 +35,7 @@ var ENDPOINTS_PAY_UNIFIEDORDER			= endpoints.wchat_pay_unifiedorder;
 var ENDPOINTS_SEND_MESSAGE			= endpoints.wchat_send_message;
 var ENDPOINTS_GET_JSAPI_TICKET		= endpoints.wchat_get_jsapi_ticket;
 var ENDPOINTS_GEN_QRCODE_NONEXPIRED = endpoints.wchat_gen_qrcode_nonexpired;
+var ENDPOINTS_SEND_TMPL_MSG 		= endpoints.wchat_send_tmpl_msg;
 
 
 
@@ -810,8 +812,58 @@ function genQRCodeNonExpired(scene_id, callback) {
 // 	});
 // }
 
+function sendTemplateMessage(template_id, url, top_color, to_user, data, callback) {
+
+	var postData 	= {
+		touser: to_user,
+		template_id: template_id,
+		url: url,
+		topcolor: top_color,
+		data: data
+	};
+
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
+		}
+
+		var currentToken 	= result;
+		
+		//currentToken = 'LfvJeoHHs6f3_0ZI3_Hx1IBpdzcInr578tCnE5LDPweVo4bXTKi42rNbUq-K71neJqbBv2-Ns4XveQOs1jQqUeWFCKL2BBvatAEBUEsbul3ffRV18XFZU1pJDtMQUtZaYXXcAFACBB';
+		
+		httpClient(ENDPOINTS_SEND_TMPL_MSG
+					.replace('{{{ACCESS_TOKEN}}}', currentToken)
+					, postData, 'post', null, function(error, result) {
+
+			if (error) return callback(error);
+
+			if (result.errcode) {
+				return callback(result);
+			}
+			
+			return callback(null, result);
+		});
+
+	});
+}
+
 
 if (require.main == module) {
+
+	var template_id 	= 'ZeegwAFvEv2sAgNdhOZk3nRyLf0NM1GTqR_kASIBepI';
+	var postData 		= _TMPL_MESSAGE[template_id];
+
+	postData.refundproduct.value 	= '0.00（原价: 128.00）';
+	postData.refundno.value 		= '1袋/5千克';
+	postData.remark.value 			= '\r\n请点击详情进行支付';
+
+	sendTemplateMessage(template_id
+			, 'http://wap.damiaa.com/', '#FF0000', 'ofnVVw9aVxkxSfvvW373yuMYT7fs'
+			, postData, function(err, result) {
+		console.log(err || result, 'sendTemplateMessage');
+	});
 	
 	// getAccessToken(function(error, result) {
 	// 	if (error) return console.log(error);
@@ -838,10 +890,10 @@ if (require.main == module) {
 	// 	console.log(result);
 	// });
 
-	genSpecMenu(null, function(error, result) {
-		if (error) return console.log(error);
-		console.log(result);
-	});
+	// genSpecMenu(null, function(error, result) {
+	// 	if (error) return console.log(error);
+	// 	console.log(result);
+	// });
 
 	// createGroup('developer', function(error, result) {
 	// 	if (error) return console.log(error);
@@ -945,7 +997,8 @@ if (require.main == module) {
 		sendMessage: sendMessage,
 		orderMessageAlert: orderMessageAlert,
 		getUserList: getUserList,
-		getUserInfoList: getUserInfoList
+		getUserInfoList: getUserInfoList,
+		sendTemplateMessage: sendTemplateMessage
 	}
 }
 

@@ -1,6 +1,7 @@
 var moment 			= require('moment');
 var wchatAPI 		= require('./wchatapi');
 var _DAMIAA_API 	= require('./damiaa-api');
+var _TMPL_MESSAGE 	= require('./message-template');
 
 
 function onView (message, callback) {
@@ -136,6 +137,23 @@ function onScancodePush(message, callback) {
 	return callback(null, sendMessage);
 }
 
+function onSendTemplateMsgFinished(message, callback) {
+
+	var fromOpenId 		= message.fromusername[0];
+	var toMasterName 	= message.tousername[0];
+
+	var content 		= 'onSendTemplateMsgFinished';
+
+	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
+							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+							+ toMasterName + ']]></FromUserName><CreateTime>' 
+							+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
+							+ content
+							+ ']]></Content></xml>';
+
+	return callback(null, sendMessage);
+}
+
 // 打开 “微信扫一扫” 时可触发该消息推送
 // 长按维码时也可以触发该消息推送
 // 扫 "公众号二维码" 时不会有消息推送
@@ -202,8 +220,7 @@ function onScan(message, callback) {
 		}
 		
 		// TODO
-		content 	= '下单成功: \r\n' + result.id + '\r\n<a href="http://www.163.com/" style="color:gray;">文本内容</a>'
-						+ "\r\n<b>666</b>";
+		content 	= '下单成功.';
 		
 		var sendMessage 	= '<xml><ToUserName><![CDATA[' 
 							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
@@ -224,6 +241,22 @@ function onScan(message, callback) {
 		// 						+ '<item><Title><![CDATA[' 
 		// 						+ '详情' + ']]></Title><Url><![CDATA[' 
 		// 						+ picurl + ']]></Url></item></Articles></xml>';
+
+		var template_id 	= 'ZeegwAFvEv2sAgNdhOZk3nRyLf0NM1GTqR_kASIBepI';
+		var postData 		= _TMPL_MESSAGE[template_id];
+
+		postData.first.value 			= 'AA精米';
+		postData.orderno.value 			= result.id;
+		postData.refundproduct.value 	= '0.00（原价: 128.00）';
+		postData.refundno.value 		= '1袋/5千克';
+		postData.remark.value 			= '\r\n点击详情完善订单信息';
+
+		// 通知用户下单成功
+		wchatAPI.sendTemplateMessage(template_id
+				, 'http://wap.damiaa.com/', '#FF0000', fromOpenId
+				, postData, function(err, result) {
+
+		});
 
 
 		return callback(null, sendMessage);
@@ -267,8 +300,6 @@ function onClick (message, callback) {
 	}
 
 	if (eventKey == 'K_MY_QRCODE') {
-		console.log(fromOpenId, 'fromOpenId');
-		console.log(toMasterName, 'toMasterName');
 
 		content 	= '我的二维码.';
 
@@ -341,27 +372,6 @@ function onPicWeixin (message, callback) {
 
 	return callback(null, sendMessage);
 
-}
-
-function onShowMyQrcode(message, callback) {
-	var fromOpenId 		= message.fromusername[0];
-	var toMasterName 	= message.tousername[0];
-	var eventKey 		= message.eventkey[0];
-
-	var content 		= null;
-
-	if (eventKey == 'K_MY_QRCODE') {
-		content 	= '显示我的二维码.';
-	}
-
-	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
-							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
-							+ toMasterName + ']]></FromUserName><CreateTime>' 
-							+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
-							+ content
-							+ ']]></Content></xml>';
-
-	return callback(null, sendMessage);
 }
 
 
@@ -484,6 +494,9 @@ function onPush (message, callback) {
 				break;
 			case 'scancode_waitmsg':
 				return onScancodeWaitmsg(message, callback);
+				break;
+			case 'templatesendjobfinish':
+				return onSendTemplateMsgFinished(message, callback);
 				break;
 			default:
 				console.log('未能捕捉到事件: ' + message.event[0] + ", " + message.event[0].toLowerCase());

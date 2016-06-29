@@ -305,30 +305,35 @@ function onClick (message, callback) {
 
 		// 根据用户的 openid 取得用户二维码
 		_DAMIAA_API.getQrcode(fromOpenId, function(err, result) {
-			var picurl 		= err ? '' : result.gen;
 
-			if (err) content 	= '未能取得您的二维码!'
+			var sendMessage 	= null;
 
-			var sendMessage 	='<xml><ToUserName><![CDATA[' 
-								+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
-								+ toMasterName + ']]></FromUserName><CreateTime>' 
-								+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
-								+ '<item><Title><![CDATA[' 
-								+ content + ']]></Title><PicUrl><![CDATA[' 
-								+ picurl + ']]></PicUrl><Url><![CDATA[' 
-								+ picurl
-								+ ']]></Url></item>'
-								+ '<item><Title><![CDATA[' 
-								+ '点击查看原图' + ']]></Title><PicUrl><![CDATA[' 
-								+ picurl + ']]></PicUrl><Url><![CDATA[' 
-								+ picurl + ']]></Url></item></Articles></xml>';
+			if (!result.mediaId) {
+				var picurl 		= err ? '' : result.gen;
 
-			// TODO
-			// var sendMessage 	='<xml><ToUserName><![CDATA[' 
-			// 					+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
-			// 					+ toMasterName + ']]></FromUserName><CreateTime>' 
-			// 					+ moment().unix() + '</CreateTime><MsgType><![CDATA[image]]></MsgType><Image><MediaId><![CDATA[' 
-			// 					+ 'LtqIc6AyH_5v4_hP93hki2_BfW9M61tatl-i-4tjEyQ' + ']]></MediaId></Image></xml>';
+				if (err) content 	= '未能取得您的二维码!'
+
+				sendMessage 	='<xml><ToUserName><![CDATA[' 
+									+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+									+ toMasterName + ']]></FromUserName><CreateTime>' 
+									+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
+									+ '<item><Title><![CDATA[' 
+									+ content + ']]></Title><PicUrl><![CDATA[' 
+									+ picurl + ']]></PicUrl><Url><![CDATA[' 
+									+ picurl
+									+ ']]></Url></item>'
+									+ '<item><Title><![CDATA[' 
+									+ '点击查看原图' + ']]></Title><PicUrl><![CDATA[' 
+									+ picurl + ']]></PicUrl><Url><![CDATA[' 
+									+ picurl + ']]></Url></item></Articles></xml>';
+			} else {
+				var sendMessage 	='<xml><ToUserName><![CDATA[' 
+									+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+									+ toMasterName + ']]></FromUserName><CreateTime>' 
+									+ moment().unix() + '</CreateTime><MsgType><![CDATA[image]]></MsgType><Image><MediaId><![CDATA[' 
+									+ result.mediaId + ']]></MediaId></Image></xml>';
+			}
+
 
 			return callback(null, sendMessage);
 		});

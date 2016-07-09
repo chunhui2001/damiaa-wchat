@@ -22,7 +22,7 @@ module.exports = {
 		},
 		remark:{
 			value: "remark",
-			color: color
+			color: "#d21c1c"
 		}
 	}
 }

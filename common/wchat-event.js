@@ -228,19 +228,7 @@ function onScan(message, callback) {
 							+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
 							+ content
 							+ ']]></Content></xml>';
-		// var picurl 			= 'http://www.damiaa.com/img/miscellaneous/icon-reg2.png';
-		// var sendMessage 	='<xml><ToUserName><![CDATA[' 
-		// 						+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
-		// 						+ toMasterName + ']]></FromUserName><CreateTime>' 
-		// 						+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
-		// 						+ '<item><Title><![CDATA[' 
-		// 						+ content + ']]></Title><PicUrl><![CDATA[' 
-		// 						+ picurl + ']]></PicUrl><Url><![CDATA[' 
-		// 						+ picurl
-		// 						+ ']]></Url></item>'
-		// 						+ '<item><Title><![CDATA[' 
-		// 						+ '详情' + ']]></Title><Url><![CDATA[' 
-		// 						+ picurl + ']]></Url></item></Articles></xml>';
+
 
 		var template_id 	= 'ZeegwAFvEv2sAgNdhOZk3nRyLf0NM1GTqR_kASIBepI';
 		var postData 		= _TMPL_MESSAGE[template_id];

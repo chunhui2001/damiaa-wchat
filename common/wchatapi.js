@@ -648,12 +648,15 @@ function unifiedOrder(params, callback) {
 
 		var jsonResult 	= JSON.parse(xml2json.toJson(result)).xml;
 
-		if (jsonResult.result_code.toUpperCase() == 'SUCCESS' && jsonResult.return_code.toUpperCase() == 'SUCCESS') {
+		if (jsonResult.result_code && jsonResult.return_code &&
+			jsonResult.result_code.toUpperCase() == 'SUCCESS' && 
+			jsonResult.return_code.toUpperCase() == 'SUCCESS') {
 			// TODO
 			// 应该验证签名是否正确
 			// ..
 			return callback(null, jsonResult);
 		} else {
+			console.log(jsonResult);
 			return callback(jsonResult);
 		}
 		

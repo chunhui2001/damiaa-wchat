@@ -148,17 +148,22 @@ app.post('/', function(req, res) {
 });
 
 app.get("/openid/:code/:granttype", function(req, res) {
+
 	var code 		= req.params.code;		
 	var grantType 	= req.params.granttype;
 
     var sendResult  = {error: false, message: null, data: {code:code, grant_type: grantType}};
 
     wchatAPI.getUserAccessToken(code, grantType, function(err, result) {
+
+    	console.log(err || result);
+
     	sendResult.error 	= err;
     	sendResult.data 	= result;
 
     	res.json(sendResult);
     });
+    
 });
 
 app.post("/unifiedorder", function(req, res) {

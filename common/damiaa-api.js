@@ -15,6 +15,35 @@ var _ENDPOINTS_PUSH_EVENTS			= _DAMIAA_API_ENDPOINTS.push_events;
 var _ENDPOINTS_ME					= _DAMIAA_API_ENDPOINTS.me;
 var _ENDPOINTS_PARTNERS				= _DAMIAA_API_ENDPOINTS.partners;
 var _ENDPOINTS_GET_QRCODE			= _DAMIAA_API_ENDPOINTS.get_qrcode;
+var _ENDPOINTS_USER_REGISTER		= _DAMIAA_API_ENDPOINTS.user_register;
+
+
+
+function user_register(username, password, openid, unionid, photo, callback) {
+	_HTTP_CLIENT(_ENDPOINTS_USER_REGISTER, {
+		name: username, passwd: password, openId:openid, unionId:unionid, photo:photo
+	}, 'post', null, function(error, result) {
+
+		return callback(false);
+
+		if (error) {
+    		// sendResult.error 	= true;
+    		// sendResult.data 	= error;
+    		// sendResult.message 	= error.message;
+    		return callback(error);
+    	}
+
+    	if (result) {
+	    	sendResult.data 	= result.data;
+	    	sendResult.message 	= result.message;
+	    	sendResult.error 	= result.error;
+    	}
+
+		return callback(error, sendResult);
+
+	});
+
+}
 
 
 function paymentComplement(userid, openid, orderid, paymentInfo, callback) {
@@ -195,6 +224,7 @@ if (require.main == module) {
 		me: me,
 		partnerList: partnerList,
 		getQrcode: getQrcode,
-		createOrder: createOrder
+		createOrder: createOrder,
+		user_register: user_register
 	}
 }

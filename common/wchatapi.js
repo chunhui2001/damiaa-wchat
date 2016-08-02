@@ -179,19 +179,23 @@ function genMenu(meun, callback) {
 				// }, 
 				{
 					"name":"菜单",
-					"sub_button":[ {
-		                    "type": "scancode_waitmsg", 
-		                    "name": "一键扫码下单", 
-		                    "key": MENU_KEYS.KEY_SetupOrder_AUTO
-		                }, {
-						   "type": "pic_weixin", 
-							"name": "上传头像", 
-							"key": MENU_KEYS.KEY_UploadHeadPhoto, 
-						}, {
+					"sub_button":[ 
+					    // {
+		       //              "type": "scancode_waitmsg", 
+		       //              "name": "一键扫码下单", 
+		       //              "key": MENU_KEYS.KEY_SetupOrder_AUTO
+		       //          }, 
+		    //             {
+						//    "type": "pic_weixin", 
+						// 	"name": "上传头像", 
+						// 	"key": MENU_KEYS.KEY_UploadHeadPhoto, 
+						// }, 
+						{
 							"type":"view",
-							"name":"用户登陆",
-							"url":"http://wap.damiaa.com/login/"
+							"name":"用户中心",
+							"url":"http://wap.damiaa.com/#/login/"
 						}
+
 		                // , {
 		                //     "type": "scancode_push", 
 		                //     "name": "扫码推事件", 
@@ -212,6 +216,8 @@ function genMenu(meun, callback) {
 		}
 
 		var currentToken 	= result;
+
+		console.log(ENDPOINTS_GEN_MENU.replace('{{{ACCESS_TOKEN}}}', currentToken), 'ENDPOINTS_GEN_MENU');
 
 		httpClient(ENDPOINTS_GEN_MENU.replace('{{{ACCESS_TOKEN}}}', currentToken), theMeun, 'post', null, function(error, result) {
 			if (error) return callback(error);
@@ -267,11 +273,13 @@ function genSpecMenu(specMenu, callback) {
 				// } , 
 				{
 					"name":"菜单",
-					"sub_button":[ {
-		                    "type": "scancode_waitmsg", 
-		                    "name": "一键扫码下单", 
-		                    "key": MENU_KEYS.KEY_SetupOrder_AUTO
-		                }, {
+					"sub_button":[ 
+					    // {
+		       //              "type": "scancode_waitmsg", 
+		       //              "name": "一键扫码下单", 
+		       //              "key": MENU_KEYS.KEY_SetupOrder_AUTO
+		       //          }, 
+		                {
 		                    "type": "click", 
 		                    "name": "我的二维码", 
 		                    "key": MENU_KEYS.MY_QRCODE
@@ -281,7 +289,7 @@ function genSpecMenu(specMenu, callback) {
 							"key": MENU_KEYS.KEY_UploadHeadPhoto, 
 						}, {
 							"type":"view",
-							"name":"用户登陆",
+							"name":"用户中心",
 							"url":"http://wap.damiaa.com/#/login/"
 						}, {
 						   "type":"click",
@@ -346,7 +354,8 @@ function genSpecMenu(specMenu, callback) {
 
 		var currentToken 	= result;
 		
-		
+		console.log(ENDPOINTS_GEN_SPEC_MENU.replace('{{{ACCESS_TOKEN}}}', currentToken), 'ENDPOINTS_GEN_SPEC_MENU');
+
 		httpClient(ENDPOINTS_GEN_SPEC_MENU.replace('{{{ACCESS_TOKEN}}}', currentToken), theSpecMeun, 'post', null, function(error, result) {
 			if (error) return callback(error);
 
@@ -388,6 +397,9 @@ function createGroup(groupName, callback) {
 }
 
 function joinGroup(openid, groupid, callback) {	
+
+	// return callback('暂时不加入用户组。。。');
+
 	if (_.isEmpty(openid)) return callback('openid 不可以为空！');
 
 	var groupMapping 	= {
@@ -855,18 +867,18 @@ function sendTemplateMessage(template_id, url, top_color, to_user, data, callbac
 
 if (require.main == module) {
 
-	var template_id 	= 'ZeegwAFvEv2sAgNdhOZk3nRyLf0NM1GTqR_kASIBepI';
-	var postData 		= _TMPL_MESSAGE[template_id];
+	// var template_id 	= 'ZeegwAFvEv2sAgNdhOZk3nRyLf0NM1GTqR_kASIBepI';
+	// var postData 		= _TMPL_MESSAGE[template_id];
 
-	postData.refundproduct.value 	= '0.00（原价: 128.00）';
-	postData.refundno.value 		= '1袋/5千克';
-	postData.remark.value 			= '\r\n请点击详情进行支付';
+	// postData.refundproduct.value 	= '0.00（原价: 128.00）';
+	// postData.refundno.value 		= '1袋/5千克';
+	// postData.remark.value 			= '\r\n请点击详情进行支付';
 
-	sendTemplateMessage(template_id
-			, 'http://wap.damiaa.com/', '#FF0000', 'ofnVVw9aVxkxSfvvW373yuMYT7fs'
-			, postData, function(err, result) {
-		console.log(err || result, 'sendTemplateMessage');
-	});
+	// sendTemplateMessage(template_id
+	// 		, 'http://wap.damiaa.com/', '#FF0000', 'ofnVVw9aVxkxSfvvW373yuMYT7fs'
+	// 		, postData, function(err, result) {
+	// 	console.log(err || result, 'sendTemplateMessage');
+	// });
 	
 	// getAccessToken(function(error, result) {
 	// 	if (error) return console.log(error);
@@ -874,11 +886,6 @@ if (require.main == module) {
 	// });
 	
 	// getIPList(function(error, result) {
-	// 	if (error) return console.log(error);
-	// 	console.log(result);
-	// });
-
-	// getMenu(function(error, result) {
 	// 	if (error) return console.log(error);
 	// 	console.log(result);
 	// });
@@ -893,10 +900,10 @@ if (require.main == module) {
 	// 	console.log(result);
 	// });
 
-	// genSpecMenu(null, function(error, result) {
-	// 	if (error) return console.log(error);
-	// 	console.log(result);
-	// });
+	genSpecMenu(null, function(error, result) {
+		if (error) return console.log(error);
+		console.log(result);
+	});
 
 	// createGroup('developer', function(error, result) {
 	// 	if (error) return console.log(error);
@@ -1001,7 +1008,8 @@ if (require.main == module) {
 		orderMessageAlert: orderMessageAlert,
 		getUserList: getUserList,
 		getUserInfoList: getUserInfoList,
-		sendTemplateMessage: sendTemplateMessage
+		sendTemplateMessage: sendTemplateMessage,
+		getUserInfo: getUserInfo
 	}
 }
 

@@ -11,4 +11,5 @@ module.exports = {
 	me: 'http://' + globalConfig.DAMIAA_API_HOSTNAME + '/me',
 	partners: 'http://' + globalConfig.DAMIAA_API_HOSTNAME + '/partners/',
 	get_qrcode: 'http://' + globalConfig.DAMIAA_API_HOSTNAME + '/get-qrcode/{{{openid}}}',
+	user_register: 'http://' + globalConfig.DAMIAA_API_HOSTNAME + '/register',
 }

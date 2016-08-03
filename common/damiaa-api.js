@@ -1,4 +1,5 @@
-var _ 		= require('underscore');
+var _ 				= require('underscore');
+var ObjectID 		= require("bson-objectid");
 
 var _HTTP_CLIENT 				= require('./http-client').httpClient;
 var _DAMIAA_API_ENDPOINTS 		= require('../config/endpoints-damiaapi-basic');
@@ -20,18 +21,33 @@ var _ENDPOINTS_USER_REGISTER		= _DAMIAA_API_ENDPOINTS.user_register;
 
 
 function user_register(username, password, openid, unionid, photo, callback) {
+
+	var uname 	= username;
+	var passwd 	= password;
+
+	if (uname == null) {
+		uname = ObjectID.generate();//.replace('-', '');
+	}
+
+	if (passwd == null) {
+		passwd = ObjectID.generate();
+	}
+
+	console.log(_ENDPOINTS_USER_REGISTER, '_ENDPOINTS_USER_REGISTER');
+
 	_HTTP_CLIENT(_ENDPOINTS_USER_REGISTER, {
-		name: username, passwd: password, openId:openid, unionId:unionid, photo:photo
+		name: uname, passwd: passwd, openId:openid, unionId:unionid, photo:photo
 	}, 'post', null, function(error, result) {
 
-		return callback(false);
 
-		if (error) {
+		if (error || result.error) {
     		// sendResult.error 	= true;
     		// sendResult.data 	= error;
     		// sendResult.message 	= error.message;
-    		return callback(error);
+    		return callback(result);
     	}
+
+    	var sendResult = {};
 
     	if (result) {
 	    	sendResult.data 	= result.data;
@@ -210,9 +226,14 @@ function createOrder(params, callback) {
 
 
 if (require.main == module) {
-	getQrcode('ofnVVw9aVxkxSfvvW373yuMYT7fs', function(err, result) {
+	// getQrcode('ofnVVw9aVxkxSfvvW373yuMYT7fs', function(err, result) {
+	// 	console.log(err || result);
+	// });
+
+	user_register(null, null, null, null, null, function(err, result) {
 		console.log(err || result);
 	});
+
 } else {
 	module.exports = {
 		uploadImage: uploadImage,

@@ -190,7 +190,12 @@ function genMenu(meun, callback) {
 						// 	"name": "上传头像", 
 						// 	"key": MENU_KEYS.KEY_UploadHeadPhoto, 
 						// }, 
-						{
+						
+		                {
+		                    "type": "click", 
+		                    "name": "我的二维码", 
+		                    "key": MENU_KEYS.MY_QRCODE
+		                }, {
 							"type":"view",
 							"name":"用户中心",
 							"url":"http://wap.damiaa.com/#/login/"

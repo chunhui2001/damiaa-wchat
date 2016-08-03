@@ -12,6 +12,8 @@ function onSubscribe(message, callback) {
 
 	console.log(message, "关注~");
 
+
+
 	// 1. 搜索公众号关注
 	// 2. 扫码关注
 	// 3. 名片关注
@@ -70,8 +72,9 @@ function onSubscribe(message, callback) {
 
 			});
 
+			console.log(err || result, '_DAMIAA_API.user_register');
 
-			if (err) { 
+			if (err && err.message.indexOf('exists:') == -1) { 
 				console.log(userinfo, "自动注册失败，需手动帮用户注册！(需给管理员发送消息提醒)");
 
 				return callback(null, sendMessage);
@@ -412,40 +415,50 @@ function onClick (message, callback) {
 
 		content 	= '我的二维码.';
 
-		// 根据用户的 openid 取得用户二维码
-		_DAMIAA_API.getQrcode(fromOpenId, function(err, result) {
+		var media_id 	= 'LtqIc6AyH_5v4_hP93hki2_BfW9M61tatl-i-4tjEyQ';//'https://mmbiz.qlogo.cn/mmbiz/yM1PhmSgm3fjIJhkscTAbmF50ApcF1ibBlCibz0tO0yfCZQtnMWuibicIRncO6BZFHEm2HjeINRDyXgGxQCQib1tAiaQ/0?wx_fmt=jpeg';
 
-			var sendMessage 	= null;
-
-			if (!result.mediaId) {
-				var picurl 		= err ? '' : result.gen;
-
-				if (err) content 	= '未能取得您的二维码!'
-
-				sendMessage 	='<xml><ToUserName><![CDATA[' 
-									+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
-									+ toMasterName + ']]></FromUserName><CreateTime>' 
-									+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
-									+ '<item><Title><![CDATA[' 
-									+ content + ']]></Title><PicUrl><![CDATA[' 
-									+ picurl + ']]></PicUrl><Url><![CDATA[' 
-									+ picurl
-									+ ']]></Url></item>'
-									+ '<item><Title><![CDATA[' 
-									+ '点击查看原图' + ']]></Title><PicUrl><![CDATA[' 
-									+ picurl + ']]></PicUrl><Url><![CDATA[' 
-									+ picurl + ']]></Url></item></Articles></xml>';
-			} else {
-				var sendMessage 	='<xml><ToUserName><![CDATA[' 
+		var sendMessage 	='<xml><ToUserName><![CDATA[' 
 									+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
 									+ toMasterName + ']]></FromUserName><CreateTime>' 
 									+ moment().unix() + '</CreateTime><MsgType><![CDATA[image]]></MsgType><Image><MediaId><![CDATA[' 
-									+ result.mediaId + ']]></MediaId></Image></xml>';
-			}
+									+ media_id + ']]></MediaId></Image></xml>';
+
+		return callback(null, sendMessage);					
+
+		// 根据用户的 openid 取得用户二维码
+		// _DAMIAA_API.getQrcode(fromOpenId, function(err, result) {
+
+		// 	var sendMessage 	= null;
+
+		// 	if (!result.mediaId) {
+		// 		var picurl 		= err ? '' : result.gen;
+
+		// 		if (err) content 	= '未能取得您的二维码!'
+
+		// 		sendMessage 	='<xml><ToUserName><![CDATA[' 
+		// 							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+		// 							+ toMasterName + ']]></FromUserName><CreateTime>' 
+		// 							+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
+		// 							+ '<item><Title><![CDATA[' 
+		// 							+ content + ']]></Title><PicUrl><![CDATA[' 
+		// 							+ picurl + ']]></PicUrl><Url><![CDATA[' 
+		// 							+ picurl
+		// 							+ ']]></Url></item>'
+		// 							+ '<item><Title><![CDATA[' 
+		// 							+ '点击查看原图' + ']]></Title><PicUrl><![CDATA[' 
+		// 							+ picurl + ']]></PicUrl><Url><![CDATA[' 
+		// 							+ picurl + ']]></Url></item></Articles></xml>';
+		// 	} else {
+		// 		var sendMessage 	='<xml><ToUserName><![CDATA[' 
+		// 							+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 
+		// 							+ toMasterName + ']]></FromUserName><CreateTime>' 
+		// 							+ moment().unix() + '</CreateTime><MsgType><![CDATA[image]]></MsgType><Image><MediaId><![CDATA[' 
+		// 							+ result.mediaId + ']]></MediaId></Image></xml>';
+		// 	}
 
 
-			return callback(null, sendMessage);
-		});
+		// 	return callback(null, sendMessage);
+		// });
 		
 	} else {
 

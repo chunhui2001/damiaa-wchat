@@ -799,38 +799,42 @@ function genQRCodeNonExpired(scene_id, callback) {
 	});
 }
 
-// function uploadMedia(media_path, callback) {
-// 	_FETCH_TOKEN(function (err, result) {
-// 		if (err) {
-// 			// TODO
-// 			console.log('fetch token failed!');
-// 			return;
-// 		}
+function uploadMedia(media_path, callback) {
 
-// 		var currentToken 	= result;
+	// curl "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=Ug7Hzb6eGauyQgtGv3-samPHE_7gMHQlIjtv8Z5SmdKbKAc8qSvB-vWzxLb1UZJIiADq5wAEcselJGsFLnI2R4mAfnszb-QQtDi66EaLvbfHD5ihen7U-e0rCr7JckK9EAIdABAIEM" \
+	// -F media=@media.file -F  description='{"title":"poster", "introduction":"二维码海报"}'
 
-// 		// httpClient(ENDPOINTS_GEN_QRCODE_NONEXPIRED
-// 		// 			.replace('{{{ACCESS_TOKEN}}}', currentToken)
-// 		// 			, {
-// 		// 				"action_name": "QR_LIMIT_SCENE", 
-// 		// 				"action_info": {
-// 		// 					"scene": {
-// 		// 						"scene_id": scene_id
-// 		// 					}
-// 		// 				}
-// 		// 			}
-// 		// 			, 'post', null, function(error, result) {
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
+		}
 
-// 		// 	if (error) return callback(error);
+		var currentToken 	= result;
 
-// 		// 	if (result.errcode) {
-// 		// 		return callback(result);
-// 		// 	}
+		httpClient(ENDPOINTS_GEN_QRCODE_NONEXPIRED
+					.replace('{{{ACCESS_TOKEN}}}', currentToken)
+					, {
+						"action_name": "QR_LIMIT_SCENE", 
+						"action_info": {
+							"scene": {
+								"scene_id": scene_id
+							}
+						}
+					}
+					, 'post', null, function(error, result) {
 
-// 		// 	return callback(null, result);
-// 		// });
-// 	});
-// }
+			if (error) return callback(error);
+
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			return callback(null, result);
+		});
+	});
+}
 
 function sendTemplateMessage(template_id, url, top_color, to_user, data, callback) {
 

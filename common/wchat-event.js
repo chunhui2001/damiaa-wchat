@@ -431,7 +431,12 @@ function onClick (message, callback) {
 
 		content 	= '我的二维码.';
 
-		var media_id 	= 'LtqIc6AyH_5v4_hP93hki2_BfW9M61tatl-i-4tjEyQ';//'https://mmbiz.qlogo.cn/mmbiz/yM1PhmSgm3fjIJhkscTAbmF50ApcF1ibBlCibz0tO0yfCZQtnMWuibicIRncO6BZFHEm2HjeINRDyXgGxQCQib1tAiaQ/0?wx_fmt=jpeg';
+		// {
+		// 	"media_id":"LtqIc6AyH_5v4_hP93hkiz58hVlEqqIjmLxVrniWIlk",
+		// 	"url":"http:\/\/mmbiz.qpic.cn\/mmbiz\/yM1PhmSgm3f7ibc7GdiccUfq5DfuSicgAyLLyqc3Myq0fXDcuoufWOyLzgyoDNapTSvWBRvKNs1g6OV9nWPZgJ67g\/0?wx_fmt=jpeg"
+		// }
+
+		var media_id 	= 'LtqIc6AyH_5v4_hP93hkiz58hVlEqqIjmLxVrniWIlk'; // 二维码海报
 
 		var sendMessage 	='<xml><ToUserName><![CDATA[' 
 									+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 

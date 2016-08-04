@@ -81,7 +81,7 @@ function onSubscribe(message, callback) {
 			}
 
 			if (!(eventKey && ticket)) {
-				// 3.
+				// 3. 不是扫码关注，不自动下单
 				return callback(null, sendMessage);
 			}
 
@@ -205,6 +205,21 @@ function onSendTemplateMsgFinished(message, callback) {
 
 function createOrderAuto(openid, tomaster_name, ticket, callback) {
 
+
+	// TODO
+	content 	= '正在下单...';
+	
+	var sendMessage 	= '<xml><ToUserName><![CDATA[' 
+						+ openid + ']]></ToUserName><FromUserName><![CDATA[' 
+						+ tomaster_name + ']]></FromUserName><CreateTime>' 
+						+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
+						+ content
+						+ ']]></Content></xml>';
+
+
+	callback(null, sendMessage);
+
+
 	// TODO
 	// 1. 判断当前时间段是否是免费下单时段
 	// 2. 如不是免费下单时段, 则取收费商品时段
@@ -223,52 +238,55 @@ function createOrderAuto(openid, tomaster_name, ticket, callback) {
 	orderData[goodsId] 	= 1;		// 商品数量
 
 	_DAMIAA_API.createOrder(orderData, function(err, result) {
-		if (err) {
-			if (err.status == 'NOT_ACCEPTABLE') {
-				content 	= '您还没有注册， 请先去注册！';
+		// if (err) {
+		// 	if (err.status == 'NOT_ACCEPTABLE') {
+		// 		content 	= '您还没有注册， 请先去注册！';
 
-				var sendMessage 	='<xml><ToUserName><![CDATA[' 
-				+ openid + ']]></ToUserName><FromUserName><![CDATA[' 
-				+ tomaster_name + ']]></FromUserName><CreateTime>' 
-				+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
-				+ '<item><Title><![CDATA[' 
-				+ content + ']]></Title><PicUrl><![CDATA[' 
-				+ 'http://www.damiaa.com/img/miscellaneous/icon-reg.jpg' + ']]></PicUrl><Url><![CDATA[' 
-				+ 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbfbeee15bbe621e6&redirect_uri=http%3A%2F%2Fwww.damiaa.com%2Fregister&response_type=code&scope=snsapi_base&state=HbYFbj4CAlo72uPw#wechat_redirect' 
-				+ ']]></Url></item>'
-				+ '<item><Title><![CDATA[' 
-				+ '现在就去注册吧...' + ']]></Title><PicUrl><![CDATA[' 
-				+ 'http://www.damiaa.com/img/miscellaneous/icon-reg2.png' + ']]></PicUrl><Url><![CDATA[' 
-				+ 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbfbeee15bbe621e6&redirect_uri=http%3A%2F%2Fwww.damiaa.com%2Fregister&response_type=code&scope=snsapi_base&state=HbYFbj4CAlo72uPw#wechat_redirect' 
-				+ ']]></Url></item></Articles></xml>';
+		// 		var sendMessage 	='<xml><ToUserName><![CDATA[' 
+		// 		+ openid + ']]></ToUserName><FromUserName><![CDATA[' 
+		// 		+ tomaster_name + ']]></FromUserName><CreateTime>' 
+		// 		+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
+		// 		+ '<item><Title><![CDATA[' 
+		// 		+ content + ']]></Title><PicUrl><![CDATA[' 
+		// 		+ 'http://www.damiaa.com/img/miscellaneous/icon-reg.jpg' + ']]></PicUrl><Url><![CDATA[' 
+		// 		+ 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbfbeee15bbe621e6&redirect_uri=http%3A%2F%2Fwww.damiaa.com%2Fregister&response_type=code&scope=snsapi_base&state=HbYFbj4CAlo72uPw#wechat_redirect' 
+		// 		+ ']]></Url></item>'
+		// 		+ '<item><Title><![CDATA[' 
+		// 		+ '现在就去注册吧...' + ']]></Title><PicUrl><![CDATA[' 
+		// 		+ 'http://www.damiaa.com/img/miscellaneous/icon-reg2.png' + ']]></PicUrl><Url><![CDATA[' 
+		// 		+ 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbfbeee15bbe621e6&redirect_uri=http%3A%2F%2Fwww.damiaa.com%2Fregister&response_type=code&scope=snsapi_base&state=HbYFbj4CAlo72uPw#wechat_redirect' 
+		// 		+ ']]></Url></item></Articles></xml>';
 
-				return callback(null, sendMessage);
-			} else {
-				// 下单失败稍后再试
-			}
+		// 		return callback(null, sendMessage);
+		// 	} else {
+		// 		// 下单失败稍后再试
+		// 	}
 
-			return;
-		}
+		// 	return;
+		// }
 		
-		// TODO
-		content 	= '下单成功.';
-		
-		var sendMessage 	= '<xml><ToUserName><![CDATA[' 
-							+ openid + ']]></ToUserName><FromUserName><![CDATA[' 
-							+ tomaster_name + ']]></FromUserName><CreateTime>' 
-							+ moment().unix() + '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' 
-							+ content
-							+ ']]></Content></xml>';
 
 
 		var template_id 	= 'ZeegwAFvEv2sAgNdhOZk3nRyLf0NM1GTqR_kASIBepI';
 		var postData 		= _TMPL_MESSAGE[template_id];
 
-		postData.first.value 			= 'AA精米';
+		var totalPrice 		= result.itemMoney.toFixed(2); //'0.00（原价: 128.00）';
+		var weight 			= '5kg';
+		var isFree 			= false;
+
+		if (totalPrice == 0.00) {
+			isFree 	= true;
+			totalPrice = totalPrice;
+			weight 		= '2.5kg';
+		}
+
+		postData.first.value 			= 'AA精米' + (isFree ? '（特惠商品）' : '');
+
+
 		postData.orderno.value 			= result.id;
-		postData.refundproduct.value 	= '¥ ' + result.itemMoney.toFixed(2); //'0.00（原价: 128.00）';
-		postData.refundno.value 		= '1袋';
-		postData.remark.value 			= '\r\n点击详情完善订单信息';
+		postData.refundproduct.value 	= '¥ ' + totalPrice;
+		postData.refundno.value 		= '1袋（' + weight + '）';
+		postData.remark.value 			= '\r\n' + (isFree ? '当前时间下单免费, ' : '') + '点击详情完善订单信息';
 
 		// 通知用户下单成功
 		wchatAPI.sendTemplateMessage(template_id
@@ -277,8 +295,6 @@ function createOrderAuto(openid, tomaster_name, ticket, callback) {
 
 		});
 
-
-		return callback(null, sendMessage);
 	});
 
 }
@@ -651,8 +667,18 @@ if (require.main == module) {
 	// 	console.log(result, 'onImage success');
 	// });
 
+	// 注册成功, 帮用户自动下单
+	createOrderAuto('ofnVVw9aVxkxSfvvW373yuMYT7fs', 'gh_7a09008c1fd9', 
+		'gQHk7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2xqZ2pCV0hseGRLOHRvb0dmUlM2AAIE7UfyVgMEAAAAAA==', 
+		function(err, messageResult) {
+		console.log(err || messageResult);
+	});
+
 } else {
 	module.exports 	= {
 		onPush: onPush
 	}
 }
+
+
+

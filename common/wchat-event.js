@@ -270,6 +270,8 @@ function createOrderAuto(openid, tomaster_name, ticket, callback) {
 		var template_id 	= 'ZeegwAFvEv2sAgNdhOZk3nRyLf0NM1GTqR_kASIBepI';
 		var postData 		= _TMPL_MESSAGE[template_id];
 
+		console.log(err || result, 'postData');
+
 		var totalPrice 		= result.itemMoney.toFixed(2); //'0.00（原价: 128.00）';
 		var weight 			= '5kg';
 		var isFree 			= false;

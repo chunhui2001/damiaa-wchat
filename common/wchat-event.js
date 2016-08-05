@@ -238,32 +238,27 @@ function createOrderAuto(openid, tomaster_name, ticket, callback) {
 	orderData[goodsId] 	= 1;		// 商品数量
 
 	_DAMIAA_API.createOrder(orderData, function(err, result) {
-		// if (err) {
-		// 	if (err.status == 'NOT_ACCEPTABLE') {
-		// 		content 	= '您还没有注册， 请先去注册！';
+		if (err) {
 
-		// 		var sendMessage 	='<xml><ToUserName><![CDATA[' 
-		// 		+ openid + ']]></ToUserName><FromUserName><![CDATA[' 
-		// 		+ tomaster_name + ']]></FromUserName><CreateTime>' 
-		// 		+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
-		// 		+ '<item><Title><![CDATA[' 
-		// 		+ content + ']]></Title><PicUrl><![CDATA[' 
-		// 		+ 'http://www.damiaa.com/img/miscellaneous/icon-reg.jpg' + ']]></PicUrl><Url><![CDATA[' 
-		// 		+ 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbfbeee15bbe621e6&redirect_uri=http%3A%2F%2Fwww.damiaa.com%2Fregister&response_type=code&scope=snsapi_base&state=HbYFbj4CAlo72uPw#wechat_redirect' 
-		// 		+ ']]></Url></item>'
-		// 		+ '<item><Title><![CDATA[' 
-		// 		+ '现在就去注册吧...' + ']]></Title><PicUrl><![CDATA[' 
-		// 		+ 'http://www.damiaa.com/img/miscellaneous/icon-reg2.png' + ']]></PicUrl><Url><![CDATA[' 
-		// 		+ 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbfbeee15bbe621e6&redirect_uri=http%3A%2F%2Fwww.damiaa.com%2Fregister&response_type=code&scope=snsapi_base&state=HbYFbj4CAlo72uPw#wechat_redirect' 
-		// 		+ ']]></Url></item></Articles></xml>';
+			content 	= '您还没有注册， 请先去注册！';
 
-		// 		return callback(null, sendMessage);
-		// 	} else {
-		// 		// 下单失败稍后再试
-		// 	}
+			var sendMessage 	='<xml><ToUserName><![CDATA[' 
+			+ openid + ']]></ToUserName><FromUserName><![CDATA[' 
+			+ tomaster_name + ']]></FromUserName><CreateTime>' 
+			+ moment().unix() + '</CreateTime><MsgType><![CDATA[news]]></MsgType><ArticleCount>2</ArticleCount><Articles>'
+			+ '<item><Title><![CDATA[' 
+			+ content + ']]></Title><PicUrl><![CDATA[' 
+			+ 'http://www.damiaa.com/img/miscellaneous/icon-reg.jpg' + ']]></PicUrl><Url><![CDATA[' 
+			+ 'http://www.damiaa.com/' 
+			+ ']]></Url></item>'
+			+ '<item><Title><![CDATA[' 
+			+ '现在就去注册吧...' + ']]></Title><PicUrl><![CDATA[' 
+			+ 'http://www.damiaa.com/img/miscellaneous/icon-reg2.png' + ']]></PicUrl><Url><![CDATA[' 
+			+ 'http://www.damiaa.com/' 
+			+ ']]></Url></item></Articles></xml>';
 
-		// 	return;
-		// }
+			return callback(null, sendMessage);
+		}
 		
 
 

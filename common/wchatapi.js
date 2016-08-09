@@ -909,10 +909,10 @@ if (require.main == module) {
 	// 	console.log(result);
 	// });
 
-	genSpecMenu(null, function(error, result) {
-		if (error) return console.log(error);
-		console.log(result);
-	});
+	// genSpecMenu(null, function(error, result) {
+	// 	if (error) return console.log(error);
+	// 	console.log(result);
+	// });
 
 	// createGroup('developer', function(error, result) {
 	// 	if (error) return console.log(error);
@@ -955,14 +955,88 @@ if (require.main == module) {
  	// });
 
 
+
+	sendMessage('ofnVVw9aVxkxSfvvW373yuMYT7fs', 'text', {
+			         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328094823\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
+			    }, function(err, result) {
+	    if (err) return console.log(err);
+
+	    console.log(result);
+    });
+
 	// 发送文本消息
-	// sendMessage('ofnVVw9aVxkxSfvvW373yuMYT7fs', 'text', {
-	// 		         "content":"Hello World<br />hhh"
+	// sendMessage('ofnVVw3Km607Xw1SR-lqoe6Qt5iA', 'text', {
+	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328094823\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
 	// 		    }, function(err, result) {
 	//     if (err) return console.log(err);
 
 	//     console.log(result);
  //    });
+
+	// sendMessage('ofnVVw0jX1wS-CdilOyfRZRwFI-I', 'text', {
+	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328087723\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
+	// 		    }, function(err, result) {
+	//     if (err) return console.log(err);
+
+	//     console.log(result);
+ //    });
+    
+	// sendMessage('ofnVVw2rSFDBG2Ydzbwr4XfGhAqw', 'text', {
+	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328095123\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
+	// 		    }, function(err, result) {
+	//     if (err) return console.log(err);
+
+	//     console.log(result);
+ //    });
+    
+	// sendMessage('ofnVVwzZeJ4NYGg3CJyT1tmOIE1s', 'text', {
+	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328088523\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
+	// 		    }, function(err, result) {
+	//     if (err) return console.log(err);
+
+	//     console.log(result);
+ //    });
+    
+	// sendMessage('ofnVVw6AyAz7oO-Nmks8Lnh0xa6A', 'text', {
+	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328090323\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
+	// 		    }, function(err, result) {
+	//     if (err) return console.log(err);
+
+	//     console.log(result);
+ //    });
+    
+	// sendMessage('ofnVVwxjlD5oT3FTjQHwBrE5DkLI', 'text', {
+	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328091723\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
+	// 		    }, function(err, result) {
+	//     if (err) return console.log(err);
+
+	//     console.log(result);
+ //    });
+    
+	// sendMessage('ofnVVw0YvHPZZl7dewP1gbGOPa5Q', 'text', {
+	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328092523\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
+	// 		    }, function(err, result) {
+	//     if (err) return console.log(err);
+
+	//     console.log(result);
+ //    });
+    
+	// sendMessage('ofnVVw2YhUQSpkUPlQn-AaFOXjlE', 'text', {
+	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328093423\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
+	// 		    }, function(err, result) {
+	//     if (err) return console.log(err);
+
+	//     console.log(result);
+ //    });
+    
+	// sendMessage('ofnVVwyUiwfkwGcDaAEuj0ghVqBw', 'text', {
+	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328089423\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
+	// 		    }, function(err, result) {
+	//     if (err) return console.log(err);
+
+	//     console.log(result);
+ //    });
+
 
 
 	// 发送图文消息

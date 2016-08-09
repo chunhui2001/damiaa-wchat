@@ -102,15 +102,22 @@ function worker() {
 						}
 					});
 
-                    if (Object.keys(eventObj).length == 0) {
+					console.log(deliveryInfo ? deliveryInfo.length : null, deliveryNo + ': deliveryInfo && deliveryInfo.length');
+
+                    if (Object.keys(eventObj).length == 0 && deliveryInfo && deliveryInfo.length == 0) {
                             console.log('发货单号可能有误! (' + orderid + ', ' + deliveryNo + ')');
                             return;
                     }
 					
-					_DAMIAA_API.pushEvents(deliveryStatus, orderid, userid, openid, eventObj
-						, function(err, result) {
-							console.log(err || result);
-					});
+					if (Object.keys(eventObj).length > 0) {
+						_DAMIAA_API.pushEvents(deliveryStatus, orderid, userid, openid, eventObj
+							, function(err, result) {
+								console.log(err || result);
+						});
+					} else {
+						console.log('暂无新订单事件! (' + orderid + ', ' + deliveryNo + ')');
+                        return;
+					}
 				}
 			});
 		});

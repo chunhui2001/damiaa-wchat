@@ -801,7 +801,7 @@ function genQRCodeNonExpired(scene_id, callback) {
 
 function uploadMedia(media_path, callback) {
 
-	// curl "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=Ug7Hzb6eGauyQgtGv3-samPHE_7gMHQlIjtv8Z5SmdKbKAc8qSvB-vWzxLb1UZJIiADq5wAEcselJGsFLnI2R4mAfnszb-QQtDi66EaLvbfHD5ihen7U-e0rCr7JckK9EAIdABAIEM" \
+	// curl "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=J1DvNlTTgohxncEo8HE3kokY9UyGdQYoBQGZ2peiNm6cHuSar_C_cPkU51bAaCIgOZn0ie0iUF9xAV9VWI1F79nFfaFtgyi-i1kIgK68eC2a_GcB8P4npQ2VAckMVKDjTJAfAJABRI" \
 	// -F media=@media.file -F  description='{"title":"poster", "introduction":"二维码海报"}'
 
 	_FETCH_TOKEN(function (err, result) {
@@ -824,6 +824,64 @@ function uploadMedia(media_path, callback) {
 						}
 					}
 					, 'post', null, function(error, result) {
+
+			if (error) return callback(error);
+
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			return callback(null, result);
+		});
+	});
+}
+
+function getMediaList(callback) {
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
+		}
+
+		var currentToken 	= result;
+
+		httpClient("https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token={{{ACCESS_TOKEN}}}"
+					.replace('{{{ACCESS_TOKEN}}}', currentToken)
+					, {
+					    "type":'image',
+					    "offset":0,
+					    "count":200
+					}, 
+					'post', null, function(error, result) {
+
+			if (error) return callback(error);
+
+			if (result.errcode) {
+				return callback(result);
+			}
+
+			return callback(null, result);
+		});
+	});
+}
+
+function delMedia(media_id, callback) {
+	_FETCH_TOKEN(function (err, result) {
+		if (err) {
+			// TODO
+			console.log('fetch token failed!');
+			return;
+		}
+
+		var currentToken 	= result;
+
+		httpClient("https://api.weixin.qq.com/cgi-bin/material/del_material?access_token={{{ACCESS_TOKEN}}}"
+					.replace('{{{ACCESS_TOKEN}}}', currentToken)
+					, {
+						"media_id":media_id
+					}, 
+					'post', null, function(error, result) {
 
 			if (error) return callback(error);
 
@@ -875,6 +933,14 @@ function sendTemplateMessage(template_id, url, top_color, to_user, data, callbac
 
 
 if (require.main == module) {
+
+	getMediaList(function(error, result) {
+		console.log(error || result);
+	});
+
+	// delMedia('LtqIc6AyH_5v4_hP93hki6U0Oyo7Fi5onZoihXNPhxQ', function(error, result) {
+	// 	console.log(error || result);
+	// });
 
 	// var template_id 	= 'ZeegwAFvEv2sAgNdhOZk3nRyLf0NM1GTqR_kASIBepI';
 	// var postData 		= _TMPL_MESSAGE[template_id];
@@ -956,14 +1022,6 @@ if (require.main == module) {
 
 
 
-	sendMessage('ofnVVw9aVxkxSfvvW373yuMYT7fs', 'text', {
-			         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328094823\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
-			    }, function(err, result) {
-	    if (err) return console.log(err);
-
-	    console.log(result);
-    });
-
 	// 发送文本消息
 	// sendMessage('ofnVVw3Km607Xw1SR-lqoe6Qt5iA', 'text', {
 	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328094823\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
@@ -973,69 +1031,6 @@ if (require.main == module) {
 	//     console.log(result);
  //    });
 
-	// sendMessage('ofnVVw0jX1wS-CdilOyfRZRwFI-I', 'text', {
-	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328087723\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
-	// 		    }, function(err, result) {
-	//     if (err) return console.log(err);
-
-	//     console.log(result);
- //    });
-    
-	// sendMessage('ofnVVw2rSFDBG2Ydzbwr4XfGhAqw', 'text', {
-	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328095123\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
-	// 		    }, function(err, result) {
-	//     if (err) return console.log(err);
-
-	//     console.log(result);
- //    });
-    
-	// sendMessage('ofnVVwzZeJ4NYGg3CJyT1tmOIE1s', 'text', {
-	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328088523\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
-	// 		    }, function(err, result) {
-	//     if (err) return console.log(err);
-
-	//     console.log(result);
- //    });
-    
-	// sendMessage('ofnVVw6AyAz7oO-Nmks8Lnh0xa6A', 'text', {
-	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328090323\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
-	// 		    }, function(err, result) {
-	//     if (err) return console.log(err);
-
-	//     console.log(result);
- //    });
-    
-	// sendMessage('ofnVVwxjlD5oT3FTjQHwBrE5DkLI', 'text', {
-	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328091723\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
-	// 		    }, function(err, result) {
-	//     if (err) return console.log(err);
-
-	//     console.log(result);
- //    });
-    
-	// sendMessage('ofnVVw0YvHPZZl7dewP1gbGOPa5Q', 'text', {
-	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328092523\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
-	// 		    }, function(err, result) {
-	//     if (err) return console.log(err);
-
-	//     console.log(result);
- //    });
-    
-	// sendMessage('ofnVVw2YhUQSpkUPlQn-AaFOXjlE', 'text', {
-	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328093423\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
-	// 		    }, function(err, result) {
-	//     if (err) return console.log(err);
-
-	//     console.log(result);
- //    });
-    
-	// sendMessage('ofnVVwyUiwfkwGcDaAEuj0ghVqBw', 'text', {
-	// 		         "content": "您好，您的订单已交付邮政快递，发货单号为：\n KQ10328089423\n\n 您可进入公众号 '用户中心－历史订单' 中查看订单配送轨迹\n\n 祝您生活愉快 ^_^ "
-	// 		    }, function(err, result) {
-	//     if (err) return console.log(err);
-
-	//     console.log(result);
- //    });
 
 
 

@@ -376,7 +376,8 @@ function onClick (message, callback) {
 		// 	"url":"http:\/\/mmbiz.qpic.cn\/mmbiz\/yM1PhmSgm3f7ibc7GdiccUfq5DfuSicgAyLLyqc3Myq0fXDcuoufWOyLzgyoDNapTSvWBRvKNs1g6OV9nWPZgJ67g\/0?wx_fmt=jpeg"
 		// }
 
-		var media_id 	= 'LtqIc6AyH_5v4_hP93hkiz58hVlEqqIjmLxVrniWIlk'; // 二维码海报
+		// var media_id 	= 'LtqIc6AyH_5v4_hP93hkiz58hVlEqqIjmLxVrniWIlk'; // 二维码海报
+		var media_id 	= 'LtqIc6AyH_5v4_hP93hki3UZODSTnWjeen8xrx9U3do'; // 二维码海报
 
 		var sendMessage 	='<xml><ToUserName><![CDATA[' 
 									+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 

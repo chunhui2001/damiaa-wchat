@@ -43,7 +43,7 @@ var globalConfig 	= {
 
 	merchant_id: '1315577401',
 	
-	current_access_token: 'J1DvNlTTgohxncEo8HE3kokY9UyGdQYoBQGZ2peiNm6cHuSar_C_cPkU51bAaCIgOZn0ie0iUF9xAV9VWI1F79nFfaFtgyi-i1kIgK68eC2a_GcB8P4npQ2VAckMVKDjTJAfAJABRI',
+	current_access_token: 'LGRd7JBmEePy5bfPHiNlB5_ZNen1vjJDLLJ6OHwPw--I1JWcJuiB0TBl5vhviQ7AC1dT2uaRWIpOjGH81cfE_94hEmfVRCP3iKIe58-zAqKj4FVWX3pWYlNUG6iJ8rysOMAfAJACAO',
 
 	menuKeys: {
 		KEY_SetupOrder_AUTO: 'K_setup_order_auto', 					// 上传头像

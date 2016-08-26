@@ -242,7 +242,7 @@ function createOrderAuto(openid, tomaster_name, ticket, callback) {
 		if (totalPrice == 0.00) {
 			isFree 	= true;
 			totalPrice = totalPrice;
-			weight 		= '2.5kg';
+			weight 		= '1.25kg';
 		}
 
 		postData.first.value 			= 'AA精米' + (isFree ? '（特惠商品）' : '');
@@ -377,7 +377,9 @@ function onClick (message, callback) {
 		// }
 
 		// var media_id 	= 'LtqIc6AyH_5v4_hP93hkiz58hVlEqqIjmLxVrniWIlk'; // 二维码海报
-		var media_id 	= 'LtqIc6AyH_5v4_hP93hki3UZODSTnWjeen8xrx9U3do'; // 二维码海报
+		// var media_id 	= 'LtqIc6AyH_5v4_hP93hki3UZODSTnWjeen8xrx9U3do'; // 二维码海报
+		// var media_id 	= 'LtqIc6AyH_5v4_hP93hki6WMKsJTFHual7lmIZqPToI'; // 二维码海报
+		var media_id 	= 'LtqIc6AyH_5v4_hP93hki2wdRZC6znGCduhBw1wE-2o';
 
 		var sendMessage 	='<xml><ToUserName><![CDATA[' 
 									+ fromOpenId + ']]></ToUserName><FromUserName><![CDATA[' 

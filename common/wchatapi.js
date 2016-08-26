@@ -801,7 +801,7 @@ function genQRCodeNonExpired(scene_id, callback) {
 
 function uploadMedia(media_path, callback) {
 
-	// curl "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=J1DvNlTTgohxncEo8HE3kokY9UyGdQYoBQGZ2peiNm6cHuSar_C_cPkU51bAaCIgOZn0ie0iUF9xAV9VWI1F79nFfaFtgyi-i1kIgK68eC2a_GcB8P4npQ2VAckMVKDjTJAfAJABRI" \
+	// curl "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=LGRd7JBmEePy5bfPHiNlB5_ZNen1vjJDLLJ6OHwPw--I1JWcJuiB0TBl5vhviQ7AC1dT2uaRWIpOjGH81cfE_94hEmfVRCP3iKIe58-zAqKj4FVWX3pWYlNUG6iJ8rysOMAfAJACAO" \
 	// -F media=@media.file -F  description='{"title":"poster", "introduction":"二维码海报"}'
 
 	_FETCH_TOKEN(function (err, result) {
@@ -938,7 +938,9 @@ if (require.main == module) {
 		console.log(error || result);
 	});
 
-	// delMedia('LtqIc6AyH_5v4_hP93hki6U0Oyo7Fi5onZoihXNPhxQ', function(error, result) {
+	//LtqIc6AyH_5v4_hP93hkiwSBarz-DKzH1jZG9Hd5BJs
+	//LtqIc6AyH_5v4_hP93hki4euxNw_Wn40mho7DWhAg8U
+	// delMedia('LtqIc6AyH_5v4_hP93hkiwSBarz-DKzH1jZG9Hd5BJs', function(error, result) {
 	// 	console.log(error || result);
 	// });
 
